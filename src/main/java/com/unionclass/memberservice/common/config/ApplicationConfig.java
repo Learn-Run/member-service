@@ -26,7 +26,8 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return uuid -> {
-            return memberRepository.findByMemberUuid(uuid).orElseThrow(() -> new BaseException(ErrorCode.NO_EXIST_MEMBER));
+            Long memberUuid = Long.parseLong(uuid);
+            return memberRepository.findByMemberUuid(memberUuid).orElseThrow(() -> new BaseException(ErrorCode.NO_EXIST_MEMBER));
         };
     }
 

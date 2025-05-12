@@ -1,0 +1,21 @@
+spring:
+  profiles:
+    active: local
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+        format_sql: true
+
+jwt:
+  secret-key: Bt#WZxNc@M1pQ9LvUYKA8oFrTcVJX!g7qFu32LxZ$NbPCy0w
+  token:
+    access-expire-time: 24 * 60 * 60 * 1000 # 24??
+
+logging:
+  level:
+    root: INFO

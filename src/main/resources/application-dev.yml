@@ -1,0 +1,6 @@
+#spring:
+#  datasource:
+#    url: jdbc:mysql://${AWS_DB_URL}:3310/${AWS_DB_NAME}
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: ${AWS_DB_USERNAME}
+#    password: ${AWS_DB_PASSWORD}
