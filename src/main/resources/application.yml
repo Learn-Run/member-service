@@ -14,7 +14,7 @@ spring:
 jwt:
   secret-key: Bt#WZxNc@M1pQ9LvUYKA8oFrTcVJX!g7qFu32LxZ$NbPCy0w
   token:
-    access-expire-time: 86400000 # 24??
+    access-expire-time: 86400000 # 24H
 
 logging:
   level:
