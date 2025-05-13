@@ -1,4 +1,4 @@
-package com.unionclass.memberservice.common.jwt;
+package com.unionclass.memberservice.common.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -24,8 +24,7 @@ public class JwtProvider {
 
         Claims claims = Jwts.claims().subject(authentication.getName()).build();
         Date now = new Date();
-
-        Date expiration = new Date(now.getTime() + env.getProperty("jwt.token.access-expire-time"));
+        Date expiration = new Date(now.getTime() + env.getProperty("jwt.token.access-expire-time", Long.class));
 
         return BEARER_PREFIX +
                 Jwts.builder()
@@ -37,10 +36,10 @@ public class JwtProvider {
     }
 
     private Key getSignKey() {
-        return Keys.hmacShaKeyFor(env.getProperty("jwt.secret.key").getBytes());
+        return Keys.hmacShaKeyFor(env.getProperty("jwt.secret-key").getBytes());
     }
 
-    public String validateAndGetUserUuid(String token) throws IllegalStateException {
+    public String validateAndGetMemberUuid(String token) throws IllegalStateException {
         try {
             return extractClaim(token, Claims::getSubject);
         } catch (NullPointerException e) {

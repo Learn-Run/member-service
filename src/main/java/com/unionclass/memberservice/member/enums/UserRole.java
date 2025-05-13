@@ -9,26 +9,25 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Gender {
+public enum UserRole {
 
-    GENDER_MALE("남성"),
-    GENDER_FEMALE("여성")
+    ROLE_MEMBER("일반회원")
     ;
 
-    private final String gender;
+    private final String userRole;
 
     @JsonValue
-    public String getGender() {
-        return gender;
+    public String getUserRole() {
+        return userRole;
     }
 
     @JsonCreator
-    public static Gender fromString(String value) {
-        for (Gender gender : Gender.values()) {
-            if (gender.gender.equals(value)) {
-                return gender;
+    public static UserRole fromString(String value) {
+        for (UserRole userRole : UserRole.values()) {
+            if (userRole.userRole.equals(value)) {
+                return userRole;
             }
         }
-        throw new BaseException(ErrorCode.INVALID_GENDER_VALUE);
+        throw new BaseException(ErrorCode.INVALID_USER_ROLE);
     }
 }

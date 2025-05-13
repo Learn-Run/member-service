@@ -1,13 +1,15 @@
 package com.unionclass.memberservice.auth.application;
 
+import com.unionclass.memberservice.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignUpReqDto;
+import com.unionclass.memberservice.auth.dto.out.SignInResDto;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
-import com.unionclass.memberservice.common.jwt.JwtProvider;
-import com.unionclass.memberservice.common.util.NumericUuidGenerator;
+import com.unionclass.memberservice.common.security.JwtProvider;
 import com.unionclass.memberservice.member.entity.Member;
 import com.unionclass.memberservice.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,9 +26,10 @@ public class AuthServiceImpl implements AuthService {
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-    private final NumericUuidGenerator numericUuidGenerator;
 
     /**
+     * /member-service/api/v1/auth
+     *
      * 1. 회원가입
      * 2. 로그인
      */
@@ -39,14 +42,28 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void signUp(SignUpReqDto signUpReqDto) {
         try {
-            memberRepository.save(
-                    signUpReqDto.toEntity(
-                            numericUuidGenerator.generate(),
-                            passwordEncoder.encode(signUpReqDto.getPassword())
-                    )
-            );
+            memberRepository.save(signUpReqDto.toEntity(passwordEncoder.encode(signUpReqDto.getPassword())));
         } catch (Exception e) {
             throw new BaseException(ErrorCode.FAILED_TO_SIGN_UP);
+        }
+    }
+
+    /**
+     * 2. 로그인
+     * @param signInReqDto
+     * @return
+     */
+    @Transactional
+    @Override
+    public SignInResDto signIn(SignInReqDto signInReqDto) {
+        try {
+            Member member = memberRepository.findByLoginId(signInReqDto.getLoginId())
+                    .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_SIGN_IN));
+            return SignInResDto.from(
+                    member,
+                    createToken(authenticate(member, signInReqDto.getPassword())).substring(7));
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.FAILED_TO_SIGN_IN);
         }
     }
 
@@ -66,11 +83,6 @@ public class AuthServiceImpl implements AuthService {
      * @return
      */
     public Authentication authenticate(Member member, String inputPassword) {
-        return authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        member.getMemberUuid(),
-                        inputPassword
-                )
-        );
+        return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(member.getMemberUuid(), inputPassword));
     }
 }

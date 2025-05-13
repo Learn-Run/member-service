@@ -1,5 +1,6 @@
-package com.unionclass.memberservice.common.jwt;
+package com.unionclass.memberservice.common.security;
 
+import com.unionclass.memberservice.auth.application.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -41,10 +42,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
-        uuid = jwtProvider.validateAndGetUserUuid(jwt);
+        uuid = jwtProvider.validateAndGetMemberUuid(jwt);
 
         if(SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(uuid);
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(uuid);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities()
             );
