@@ -7,7 +7,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: learn_run_db
+      MYSQL_DATABASE: learn_run_member
       MYSQL_USER: learn_run_user
       MYSQL_PASSWORD: 1234
     ports:
