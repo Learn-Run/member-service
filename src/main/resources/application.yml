@@ -1,14 +1,35 @@
+server:
+  port: 8080
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    client:
+      register-with-eureka: true
+      fetch-registry: true
+      service-url:
+        defaultZone: http://localhost:8761/eureka
+
 spring:
+  application:
+    name: member-service
   profiles:
     active: prod
 
   jpa:
     hibernate:
       ddl-auto: update
-      format_sql: true
-    show-sql: true
-
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
         format_sql: true
+
+jwt:
+  secret-key: Bt#WZxNc@M1pQ9LvUYKA8oFrTcVJX!g7qFu32LxZ$NbPCy0w
+  token:
+    access-expire-time: 86400000 # 24H
+
+logging:
+  level:
+    root: INFO
