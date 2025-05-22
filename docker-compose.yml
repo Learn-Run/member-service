@@ -13,7 +13,7 @@ services:
       - "name=redis"
       - "mode=standalone"
     restart: always
-    command: redis-server /user/local/conf/redis.conf"
+    command: redis-server /user/local/conf/redis.conf
   mysql:
     image: mysql:8.0
     container_name: mysql
