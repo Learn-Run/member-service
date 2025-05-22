@@ -10,3 +10,8 @@ spring:
       idle-timeout: 300000
       max-lifetime: 900000
       connection-timeout: 10000
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379

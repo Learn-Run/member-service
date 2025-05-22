@@ -13,8 +13,8 @@ import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class JwtProvider {
 
     private final Environment env;

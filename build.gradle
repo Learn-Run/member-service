@@ -49,6 +49,14 @@ dependencies {
 
     // validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // email sending (SMTP)
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // redisson
+    implementation 'org.redisson:redisson-spring-boot-starter:3.38.0'
 }
 
 dependencyManagement {

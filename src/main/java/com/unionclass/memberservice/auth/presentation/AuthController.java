@@ -7,7 +7,9 @@ import com.unionclass.memberservice.auth.vo.in.SignInReqVo;
 import com.unionclass.memberservice.auth.vo.in.SignUpReqVo;
 import com.unionclass.memberservice.auth.vo.out.SignInResVo;
 import com.unionclass.memberservice.common.response.BaseResponseEntity;
+import com.unionclass.memberservice.common.response.ResponseMessage;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member-service/api/v1/auth")
+@Tag(name = "auth")
 public class AuthController {
 
     private final AuthService authService;
@@ -34,13 +37,13 @@ public class AuthController {
      * @param signUpReqVo
      * @return
      */
-    @Operation(summary = "회원가입", tags = {"auth"})
+    @Operation(summary = "회원가입")
     @PostMapping("/sign-up")
     public BaseResponseEntity<Void> signUp(
             @Valid @RequestBody SignUpReqVo signUpReqVo
     ) {
         authService.signUp(SignUpReqDto.from(signUpReqVo));
-        return new BaseResponseEntity<>("회원가입에 성공하였습니다.");
+        return new BaseResponseEntity<>(ResponseMessage.SIGN_UP_SUCCESS);
     }
 
     /**
@@ -48,13 +51,13 @@ public class AuthController {
      * @param signInReqVo
      * @return
      */
-    @Operation(summary = "로그인", tags = {"auth"})
+    @Operation(summary = "로그인")
     @PostMapping("/sign-in")
     public BaseResponseEntity<SignInResVo> signIn(
             @Valid @RequestBody SignInReqVo signInReqVo
     ) {
         return new BaseResponseEntity<>(
-                "로그인에 성공하였습니다.",
+                ResponseMessage.SIGN_IN_SUCCESS,
                 authService.signIn(SignInReqDto.from(signInReqVo)).toVo()
         );
     }
