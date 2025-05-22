@@ -14,7 +14,14 @@ spring:
   application:
     name: member-service
   profiles:
-    active: prod
+    active: dev
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    name: ${MAIL_SENDER_NAME}
+    address: ${MAIL_SENDER_ADDRESS}
+    password: ${MAIL_APP_PASSWORD}
 
   jpa:
     hibernate:
