@@ -16,6 +16,13 @@ spring:
   profiles:
     active: prod
 
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    name: ${MAIL_SENDER_NAME}
+    address: ${MAIL_SENDER_ADDRESS}
+    password: ${MAIL_APP_PASSWORD}
+
   jpa:
     hibernate:
       ddl-auto: update
