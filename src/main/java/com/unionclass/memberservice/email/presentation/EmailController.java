@@ -3,7 +3,9 @@ package com.unionclass.memberservice.email.presentation;
 import com.unionclass.memberservice.common.response.BaseResponseEntity;
 import com.unionclass.memberservice.common.response.ResponseMessage;
 import com.unionclass.memberservice.email.application.EmailService;
+import com.unionclass.memberservice.email.dto.in.EmailCodeReqDto;
 import com.unionclass.memberservice.email.dto.in.EmailReqDto;
+import com.unionclass.memberservice.email.vo.in.EmailCodeReqVo;
 import com.unionclass.memberservice.email.vo.in.EmailReqVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,11 +30,12 @@ public class EmailController {
     /**
      * /member-service/api/v1/email
      *
-     * 1. 메일을 통한 인증 코드 발송
+     * 1. 메일 인증코드 발송
+     * 2. 메일 인증코드 검증
      */
 
     /**
-     * 1. 메일을 통한 인증 코드 발송
+     * 1. 메일 인증코드 발송
      * @param emailReqVo
      * @return
      * @throws MessagingException
@@ -45,5 +48,12 @@ public class EmailController {
     ) throws MessagingException, UnsupportedEncodingException {
         emailService.sendVerificationCode(EmailReqDto.from(emailReqVo));
         return new BaseResponseEntity<>(ResponseMessage.SEND_VERIFICATION_EMAIL_SUCCESS);
+    }
+
+    @Operation(summary = "메일 인증코드 검증")
+    public Void verifyCode(
+            @Valid @RequestBody EmailCodeReqVo emailCodeReqVo
+    ) {
+        emailService.verifyCode(EmailCodeReqDto.from(emailCodeReqVo));
     }
 }
