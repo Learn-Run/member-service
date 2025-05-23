@@ -71,7 +71,7 @@ public class EmailServiceImpl implements EmailService {
      * @param emailCodeReqDto
      */
     @Override
-    public void verifyCode(EmailCodeReqDto emailCodeReqDto) {
+    public void verifyEmailCode(EmailCodeReqDto emailCodeReqDto) {
 
         String redisKey = EMAIL_VERIFY_KEY_PREFIX + emailCodeReqDto.getEmail();
         String storedCode = redisUtils.getValue(redisKey).toString();

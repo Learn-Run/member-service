@@ -9,5 +9,5 @@ import java.io.UnsupportedEncodingException;
 public interface EmailService {
 
     void sendVerificationCode(EmailReqDto emailReqDto) throws MessagingException, UnsupportedEncodingException;
-    void verifyCode(EmailCodeReqDto emailCodeReqDto);
+    void verifyEmailCode(EmailCodeReqDto emailCodeReqDto);
 }
