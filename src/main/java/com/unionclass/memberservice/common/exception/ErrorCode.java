@@ -26,7 +26,9 @@ public enum ErrorCode {
     INVALID_GENDER_VALUE(HttpStatus.BAD_REQUEST, false, 1101, "유효하지 않은 성별 정보입니다."),
     INVALID_USER_ROLE(HttpStatus.BAD_REQUEST, false, 1102, "유효하지 않은 유저 권한입니다."),
     EMAIL_ENCODING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, 1103, "시스템 문자 인코딩 오류로 메일을 보낼 수 없습니다."),
-    EMAIL_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, false, 1104, "메일 서버 오류로 인해 전송에 실패했습니다.")
+    EMAIL_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, false, 1104, "메일 서버 오류로 인해 전송에 실패했습니다."),
+    EMAIL_CODE_INVALID(HttpStatus.BAD_REQUEST, false, 1105, "유효하지 않은 인증코드입니다."),
+    EMAIL_CODE_EXPIRED(HttpStatus.BAD_REQUEST, false, 1106, "인증코드가 만료되었습니다.")
     ;
 
     /**

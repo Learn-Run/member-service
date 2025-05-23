@@ -2,6 +2,7 @@ package com.unionclass.memberservice.email.application;
 
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
+import com.unionclass.memberservice.email.dto.in.EmailCodeReqDto;
 import com.unionclass.memberservice.email.util.EmailTemplateProvider;
 import com.unionclass.memberservice.common.redis.RedisUtils;
 import com.unionclass.memberservice.email.dto.in.EmailReqDto;
@@ -33,11 +34,12 @@ public class EmailServiceImpl implements EmailService {
     /**
      * /member-service/api/v1/email
      *
-     * 1. 메일을 통한 인증 코드 발송
+     * 1. 메일 인증코드 발송
+     * 2. 메일 인증코드 검증
      */
 
     /**
-     * 1. 메일을 통한 인증 코드 발송
+     * 1. 메일 인증코드 발송
      * @param emailReqDto
      */
     @Override
@@ -54,7 +56,7 @@ public class EmailServiceImpl implements EmailService {
                             emailTemplateProvider.getVerificationCodeByEmailTemplate(verificationCode)
                     )
             );
-            log.info("이메일 인증코드 발송 성공 - 수신자: {}", emailReqDto.getEmail());
+            log.info("메일 인증코드 발송 성공 - 수신자: {}", emailReqDto.getEmail());
         } catch (UnsupportedEncodingException e) {
             log.error("인코딩 설정 오류: {}", e.getMessage(), e);
             throw new BaseException(ErrorCode.EMAIL_ENCODING_ERROR);
@@ -62,5 +64,30 @@ public class EmailServiceImpl implements EmailService {
             log.error("메일 전송 실패: {}", e.getMessage(), e);
             throw new BaseException(ErrorCode.EMAIL_SEND_FAIL);
         }
+    }
+
+    /**
+     * 2. 메일 인증코드 검증
+     * @param emailCodeReqDto
+     */
+    @Override
+    public void verifyEmailCode(EmailCodeReqDto emailCodeReqDto) {
+
+        String redisKey = EMAIL_VERIFY_KEY_PREFIX + emailCodeReqDto.getEmail();
+        String storedCode = redisUtils.getValue(redisKey).toString();
+
+        if (!redisUtils.hasKey(redisKey)) {
+            log.warn("인증코드 키 없음 - 이메일: {}", emailCodeReqDto.getEmail());
+            throw new BaseException(ErrorCode.EMAIL_CODE_EXPIRED);
+        }
+
+        if (!storedCode.equals(emailCodeReqDto.getVerificationCode())) {
+            log.warn("메일 인증코드 불일치 - 이메일 : {}, 입력값 : {}, 실제값 : {}",
+                    emailCodeReqDto.getEmail(), emailCodeReqDto.getVerificationCode(), storedCode);
+            throw new BaseException(ErrorCode.EMAIL_CODE_INVALID);
+        }
+
+        redisUtils.delete(redisKey);
+        log.info("메일 인증코드 검증 성공 - 이메일 : {}", emailCodeReqDto.getEmail());
     }
 }

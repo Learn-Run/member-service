@@ -43,7 +43,7 @@ public class AuthController {
             @Valid @RequestBody SignUpReqVo signUpReqVo
     ) {
         authService.signUp(SignUpReqDto.from(signUpReqVo));
-        return new BaseResponseEntity<>(ResponseMessage.SIGN_UP_SUCCESS);
+        return new BaseResponseEntity<>(ResponseMessage.SIGN_UP_SUCCESS.getMessage());
     }
 
     /**
@@ -57,7 +57,7 @@ public class AuthController {
             @Valid @RequestBody SignInReqVo signInReqVo
     ) {
         return new BaseResponseEntity<>(
-                ResponseMessage.SIGN_IN_SUCCESS,
+                ResponseMessage.SIGN_IN_SUCCESS.getMessage(),
                 authService.signIn(SignInReqDto.from(signInReqVo)).toVo()
         );
     }
