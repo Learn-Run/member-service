@@ -1,11 +1,6 @@
 server:
   port: 8080
 
-spring:
-  application:
-    name: member-service
-  profiles:
-    active: prod
 
 eureka:
   instance:
@@ -13,6 +8,12 @@ eureka:
     client:
       register-with-eureka: true
       fetch-registry: true
+
+spring:
+  application:
+    name: member-service
+  profiles:
+    active: prod
 
   mail:
     host: smtp.gmail.com
