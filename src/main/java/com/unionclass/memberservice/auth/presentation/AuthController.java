@@ -1,8 +1,10 @@
 package com.unionclass.memberservice.auth.presentation;
 
 import com.unionclass.memberservice.auth.application.AuthService;
+import com.unionclass.memberservice.auth.dto.in.LoginIdReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignUpReqDto;
+import com.unionclass.memberservice.auth.vo.in.LoginIdReqVo;
 import com.unionclass.memberservice.auth.vo.in.SignInReqVo;
 import com.unionclass.memberservice.auth.vo.in.SignUpReqVo;
 import com.unionclass.memberservice.auth.vo.out.SignInResVo;
@@ -30,6 +32,7 @@ public class AuthController {
      * 1. 회원가입
      * 2. 로그인
      * 3. 이메일 중복 검사
+     * 4. 아이디 중복 검사
      */
 
     /**
@@ -112,5 +115,36 @@ public class AuthController {
     ) {
         authService.checkEmailDuplicate(EmailReqDto.from(emailReqVo));
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHECK_EMAIL_DUPLICATE.getMessage());
+    }
+
+    /**
+     * 4. 아이디 중복 검사
+     *
+     * @param loginIdReqVo
+     * @return
+     */
+    @Operation(
+            summary = "아이디 중복 검사",
+            description = """
+    사용자가 입력한 아이디(loginId)가 이미 가입된 아이디인지 검사합니다.
+
+    [요청 조건]
+    - loginId: 필수 입력, 공백 불가
+
+    [처리 방식]
+    - 아이디로 회원을 조회하여 존재 여부를 확인합니다.
+    - 이미 존재하는 경우 예외를 발생시킵니다.
+    - 존재하지 않으면 중복되지 않은 것으로 간주하고 성공 응답을 반환합니다.
+
+    [예외 코드]
+    - LOGIN_ID_ALREADY_EXISTS: 중복된 아이디일 경우
+    """
+    )
+    @PostMapping("/loginId/check-duplicate")
+    public BaseResponseEntity<Void> checkLoginIdDuplicate(
+            @Valid @RequestBody LoginIdReqVo loginIdReqVo
+    ) {
+        authService.checkLoginIdDuplicate(LoginIdReqDto.from(loginIdReqVo));
+        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHECK_LOGIN_ID_DUPLICATE.getMessage());
     }
 }
