@@ -17,7 +17,7 @@ public class EmailReqDto {
         this.email = email;
     }
 
-    public static EmailReqDto from(@Valid EmailReqVo emailReqVo) {
+    public static EmailReqDto from(EmailReqVo emailReqVo) {
         return EmailReqDto.builder()
                 .email(emailReqVo.getEmail())
                 .build();

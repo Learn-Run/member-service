@@ -32,7 +32,7 @@ public class EmailServiceImpl implements EmailService {
     private static final TimeUnit EMAIL_CODE_TTL_UNIT = TimeUnit.MINUTES;
 
     /**
-     * /member-service/api/v1/email
+     * /api/v1/email
      *
      * 1. 메일 인증코드 발송
      * 2. 메일 인증코드 검증
@@ -40,6 +40,7 @@ public class EmailServiceImpl implements EmailService {
 
     /**
      * 1. 메일 인증코드 발송
+     *
      * @param emailReqDto
      */
     @Override
@@ -68,6 +69,7 @@ public class EmailServiceImpl implements EmailService {
 
     /**
      * 2. 메일 인증코드 검증
+     *
      * @param emailCodeReqDto
      */
     @Override

@@ -1,40 +1,45 @@
 package com.unionclass.memberservice.auth.application;
 
+import com.unionclass.memberservice.auth.dto.in.LoginIdReqDto;
+import com.unionclass.memberservice.auth.dto.in.NicknameReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignUpReqDto;
 import com.unionclass.memberservice.auth.dto.out.SignInResDto;
+import com.unionclass.memberservice.auth.util.AuthUtils;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
-import com.unionclass.memberservice.common.security.JwtProvider;
+import com.unionclass.memberservice.email.dto.in.EmailReqDto;
 import com.unionclass.memberservice.member.entity.Member;
 import com.unionclass.memberservice.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AuthServiceImpl implements AuthService {
 
     private final MemberRepository memberRepository;
-    private final JwtProvider jwtProvider;
-    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final AuthUtils authUtils;
 
     /**
-     * /member-service/api/v1/auth
+     * /api/v1/auth
      *
      * 1. 회원가입
      * 2. 로그인
+     * 3. 이메일 중복 검사
+     * 4. 아이디 중복 검사
+     * 5. 닉네임 중복 검사
      */
 
     /**
      * 1. 회원가입
+     *
      * @param signUpReqDto
      */
     @Transactional
@@ -49,6 +54,7 @@ public class AuthServiceImpl implements AuthService {
 
     /**
      * 2. 로그인
+     *
      * @param signInReqDto
      * @return
      */
@@ -60,28 +66,51 @@ public class AuthServiceImpl implements AuthService {
                     .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_SIGN_IN));
             return SignInResDto.from(
                     member,
-                    createToken(authenticate(member, signInReqDto.getPassword())).substring(7));
+                    authUtils.createToken(authUtils.authenticate(member, signInReqDto.getPassword())).substring(7));
         } catch (Exception e) {
             throw new BaseException(ErrorCode.FAILED_TO_SIGN_IN);
         }
     }
 
     /**
-     * 토큰 생성
-     * @param authentication
-     * @return
+     * 3. 이메일 중복 검사
+     *
+     * @param emailReqDto
      */
-    public String createToken(Authentication authentication) {
-        return jwtProvider.generateAccessToken(authentication);
+    @Override
+    public void checkEmailDuplicate(EmailReqDto emailReqDto) {
+        if (memberRepository.findByEmail(emailReqDto.getEmail()).isPresent()) {
+            log.warn("이메일 중복됨 - 입력 이메일: {}", emailReqDto.getEmail());
+            throw new BaseException(ErrorCode.EMAIL_ALREADY_EXISTS);
+        }
+        log.info("이메일 중복 없음 - 입력 이메일: {}", emailReqDto.getEmail());
     }
 
     /**
-     * 인증
-     * @param member
-     * @param inputPassword
-     * @return
+     * 4. 아이디 중복 검사
+     *
+     * @param loginIdReqDto
      */
-    public Authentication authenticate(Member member, String inputPassword) {
-        return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(member.getMemberUuid(), inputPassword));
+    @Override
+    public void checkLoginIdDuplicate(LoginIdReqDto loginIdReqDto) {
+        if (memberRepository.findByLoginId(loginIdReqDto.getLoginId()).isPresent()) {
+            log.warn("아이디 중복됨 - 입력 아이디: {}", loginIdReqDto.getLoginId());
+            throw new BaseException(ErrorCode.LOGIN_ID_ALREADY_EXISTS);
+        }
+        log.info("아이디 중복 없음 - 입력 아이디: {}", loginIdReqDto.getLoginId());
+    }
+
+    /**
+     * 5. 닉네임 중복 검사
+     *
+     * @param nicknameReqDto
+     */
+    @Override
+    public void checkNicknameDuplicate(NicknameReqDto nicknameReqDto) {
+        if (memberRepository.findByNickname(nicknameReqDto.getNickname()).isPresent()) {
+            log.warn("닉네임 중복됨 - 입력 닉네임: {}", nicknameReqDto.getNickname());
+            throw new BaseException(ErrorCode.NICKNAME_ALREADY_EXISTS);
+        }
+        log.info("닉네임 중복 없음 - 입력 닉네임: {}", nicknameReqDto.getNickname());
     }
 }
