@@ -42,7 +42,24 @@ public class EmailController {
      * @throws MessagingException
      * @throws UnsupportedEncodingException
      */
-    @Operation(summary = "메일 인증코드 발송")
+    @Operation(
+            summary = "메일 인증코드 발송",
+            description = """
+    사용자의 이메일로 인증코드를 발송합니다.
+    
+    [요청 조건]
+    - email: 필수, 이메일 형식 준수
+
+    [처리 로직]
+    - 인증코드는 랜덤으로 6자리 숫자가 생성됩니다.
+    - Redis 에 5분 동안 저장됩니다.
+    - 이메일은 템플릿 기반으로 전송됩니다.
+
+    [예외 상황]
+    - EMAIL_SEND_FAIL: 메일 서버 오류
+    - EMAIL_ENCODING_ERROR: 메시지 인코딩 실패
+    """
+    )
     @PostMapping("/send-code")
     public BaseResponseEntity<Void> sendVerificationCode(
             @Valid @RequestBody EmailReqVo emailReqVo
@@ -57,7 +74,24 @@ public class EmailController {
      * @param emailCodeReqVo
      * @return
      */
-    @Operation(summary = "메일 인증코드 검증")
+    @Operation(
+            summary = "메일 인증코드 검증",
+            description = """
+    이메일로 발송된 인증코드를 사용자가 입력하면 해당 인증코드의 유효성을 검증합니다.
+
+    [요청 조건]
+    - email: 필수, 이메일 형식
+    - verificationCode: 필수, 인증코드 (6자리 숫자)
+
+    [처리 로직]
+    - Redis 에 저장된 인증코드(`verify:email:{email}`)와 입력된 코드가 일치하는지 확인
+    - 인증에 성공하면 해당 Redis 키 삭제
+
+    [예외 상황]
+    - EMAIL_CODE_EXPIRED: 인증코드가 존재하지 않음 (TTL 초과 또는 잘못된 이메일)
+    - EMAIL_CODE_INVALID: 인증코드 불일치
+    """
+    )
     @PostMapping("/verify-code")
     public BaseResponseEntity<Void> verifyEmailCode(
             @Valid @RequestBody EmailCodeReqVo emailCodeReqVo
