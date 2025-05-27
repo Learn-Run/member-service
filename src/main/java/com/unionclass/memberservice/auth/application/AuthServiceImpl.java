@@ -1,6 +1,7 @@
 package com.unionclass.memberservice.auth.application;
 
 import com.unionclass.memberservice.auth.dto.in.LoginIdReqDto;
+import com.unionclass.memberservice.auth.dto.in.NicknameReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignUpReqDto;
 import com.unionclass.memberservice.auth.dto.out.SignInResDto;
@@ -33,6 +34,7 @@ public class AuthServiceImpl implements AuthService {
      * 2. 로그인
      * 3. 이메일 중복 검사
      * 4. 아이디 중복 검사
+     * 5. 닉네임 중복 검사
      */
 
     /**
@@ -96,5 +98,19 @@ public class AuthServiceImpl implements AuthService {
             throw new BaseException(ErrorCode.LOGIN_ID_ALREADY_EXISTS);
         }
         log.info("아이디 중복 없음 - 입력 아이디: {}", loginIdReqDto.getLoginId());
+    }
+
+    /**
+     * 5. 닉네임 중복 검사
+     *
+     * @param nicknameReqDto
+     */
+    @Override
+    public void checkNicknameDuplicate(NicknameReqDto nicknameReqDto) {
+        if (memberRepository.findByNickname(nicknameReqDto.getNickname()).isPresent()) {
+            log.warn("닉네임 중복됨 - 입력 닉네임: {}", nicknameReqDto.getNickname());
+            throw new BaseException(ErrorCode.NICKNAME_ALREADY_EXISTS);
+        }
+        log.info("닉네임 중복 없음 - 입력 닉네임: {}", nicknameReqDto.getNickname());
     }
 }

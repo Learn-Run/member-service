@@ -2,9 +2,11 @@ package com.unionclass.memberservice.auth.presentation;
 
 import com.unionclass.memberservice.auth.application.AuthService;
 import com.unionclass.memberservice.auth.dto.in.LoginIdReqDto;
+import com.unionclass.memberservice.auth.dto.in.NicknameReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignUpReqDto;
 import com.unionclass.memberservice.auth.vo.in.LoginIdReqVo;
+import com.unionclass.memberservice.auth.vo.in.NicknameReqVo;
 import com.unionclass.memberservice.auth.vo.in.SignInReqVo;
 import com.unionclass.memberservice.auth.vo.in.SignUpReqVo;
 import com.unionclass.memberservice.auth.vo.out.SignInResVo;
@@ -33,6 +35,7 @@ public class AuthController {
      * 2. 로그인
      * 3. 이메일 중복 검사
      * 4. 아이디 중복 검사
+     * 5. 닉네임 중복 검사
      */
 
     /**
@@ -146,5 +149,35 @@ public class AuthController {
     ) {
         authService.checkLoginIdDuplicate(LoginIdReqDto.from(loginIdReqVo));
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHECK_LOGIN_ID_DUPLICATE.getMessage());
+    }
+
+    /**
+     * 5. 닉네임 중복 검사
+     *
+     * @param nicknameReqVo
+     * @return
+     */
+    @Operation(
+            summary = "닉네임 중복 검사",
+            description = """
+    사용자가 입력한 닉네임(nickname)이 이미 사용 중인지 확인합니다.
+
+    [요청 조건]
+    - nickname: 필수 입력, 공백 불가
+
+    [처리 방식]
+    - 닉네임으로 회원을 조회하여 존재 여부를 확인합니다.
+    - 이미 존재하는 경우 예외를 발생시키고, 존재하지 않으면 성공 응답을 반환합니다.
+
+    [예외 코드]
+    - NICKNAME_ALREADY_EXISTS: 중복된 닉네임일 경우
+    """
+    )
+    @PostMapping("/nickname/check-duplicate")
+    public BaseResponseEntity<Void> checkNicknameDuplicate(
+            @Valid @RequestBody NicknameReqVo nicknameReqVo
+    ) {
+        authService.checkNicknameDuplicate(NicknameReqDto.from(nicknameReqVo));
+        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHECK_NICKNAME_DUPLICATE.getMessage());
     }
 }
