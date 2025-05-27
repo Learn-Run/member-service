@@ -33,7 +33,7 @@ services:
     networks:
       - shared-net
 
-  app:
+  member-service:
     image: 009160040466.dkr.ecr.ap-northeast-2.amazonaws.com/learn-run/member-service:latest
     container_name: member-service
     depends_on:
