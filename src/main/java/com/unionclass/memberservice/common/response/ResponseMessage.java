@@ -14,5 +14,4 @@ public enum ResponseMessage {
     ;
 
     private final String message;
-
 }

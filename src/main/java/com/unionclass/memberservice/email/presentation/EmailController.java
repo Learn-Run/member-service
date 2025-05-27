@@ -21,7 +21,7 @@ import java.io.UnsupportedEncodingException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/member-service/api/v1/email")
+@RequestMapping("/api/v1/email")
 @Tag(name = "auth")
 public class EmailController {
 
@@ -51,7 +51,7 @@ public class EmailController {
     }
 
     @Operation(summary = "메일 인증코드 검증")
-    @PostMapping("/verify-email-code")
+    @PostMapping("/verify-code")
     public BaseResponseEntity<Void> verifyEmailCode(
             @Valid @RequestBody EmailCodeReqVo emailCodeReqVo
     ) {

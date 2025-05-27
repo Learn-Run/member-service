@@ -8,6 +8,8 @@ import com.unionclass.memberservice.auth.vo.in.SignUpReqVo;
 import com.unionclass.memberservice.auth.vo.out.SignInResVo;
 import com.unionclass.memberservice.common.response.BaseResponseEntity;
 import com.unionclass.memberservice.common.response.ResponseMessage;
+import com.unionclass.memberservice.email.dto.in.EmailReqDto;
+import com.unionclass.memberservice.email.vo.in.EmailReqVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -19,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/member-service/api/v1/auth")
+@RequestMapping("/api/v1/auth")
 @Tag(name = "auth")
 public class AuthController {
 
@@ -30,6 +32,7 @@ public class AuthController {
      *
      * 1. 회원가입
      * 2. 로그인
+     * 3. 이메일 중복 검사
      */
 
     /**
@@ -60,5 +63,19 @@ public class AuthController {
                 ResponseMessage.SIGN_IN_SUCCESS.getMessage(),
                 authService.signIn(SignInReqDto.from(signInReqVo)).toVo()
         );
+    }
+
+    /**
+     * 3. 이메일 중복 검사
+     * @param emailReqVo
+     * @return
+     */
+    @Operation(summary = "이메일 중복 검사")
+    @PostMapping("/email/check-duplicate")
+    public Void checkEmailDuplicate(
+            @Valid @RequestBody EmailReqVo emailReqVo
+    ) {
+        authService.checkEmailDuplicate(EmailReqDto.from(emailReqVo));
+        return null;
     }
 }

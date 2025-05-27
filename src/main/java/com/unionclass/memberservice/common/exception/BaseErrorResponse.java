@@ -1,6 +1,5 @@
 package com.unionclass.memberservice.common.exception;
 
-
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
