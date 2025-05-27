@@ -26,10 +26,11 @@ public class AuthServiceImpl implements AuthService {
     private final AuthUtils authUtils;
 
     /**
-     * /member-service/api/v1/auth
+     * /api/v1/auth
      *
      * 1. 회원가입
      * 2. 로그인
+     * 3. 이메일 중복 검사
      */
 
     /**

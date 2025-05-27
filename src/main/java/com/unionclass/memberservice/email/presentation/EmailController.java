@@ -28,7 +28,7 @@ public class EmailController {
     private final EmailService emailService;
 
     /**
-     * /member-service/api/v1/email
+     * /api/v1/email
      *
      * 1. 메일 인증코드 발송
      * 2. 메일 인증코드 검증
@@ -36,6 +36,7 @@ public class EmailController {
 
     /**
      * 1. 메일 인증코드 발송
+     *
      * @param emailReqVo
      * @return
      * @throws MessagingException
@@ -47,15 +48,21 @@ public class EmailController {
             @Valid @RequestBody EmailReqVo emailReqVo
     ) throws MessagingException, UnsupportedEncodingException {
         emailService.sendVerificationCode(EmailReqDto.from(emailReqVo));
-        return new BaseResponseEntity<>(ResponseMessage.SEND_VERIFICATION_EMAIL_SUCCESS.getMessage());
+        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_SEND_VERIFICATION_EMAIL.getMessage());
     }
 
+    /**
+     * 2. 메일 인증코드 검증
+     *
+     * @param emailCodeReqVo
+     * @return
+     */
     @Operation(summary = "메일 인증코드 검증")
     @PostMapping("/verify-code")
     public BaseResponseEntity<Void> verifyEmailCode(
             @Valid @RequestBody EmailCodeReqVo emailCodeReqVo
     ) {
         emailService.verifyEmailCode(EmailCodeReqDto.from(emailCodeReqVo));
-        return new BaseResponseEntity<>(ResponseMessage.VERIFY_EMAIL_CODE_SUCCESS.getMessage());
+        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_VERIFY_EMAIL_CODE.getMessage());
     }
 }

@@ -14,10 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,7 +25,7 @@ public class AuthController {
     private final AuthService authService;
 
     /**
-     * /member-service/api/v1/auth
+     * /api/v1/auth
      *
      * 1. 회원가입
      * 2. 로그인
@@ -37,6 +34,7 @@ public class AuthController {
 
     /**
      * 1. 회원가입
+     *
      * @param signUpReqVo
      * @return
      */
@@ -46,11 +44,12 @@ public class AuthController {
             @Valid @RequestBody SignUpReqVo signUpReqVo
     ) {
         authService.signUp(SignUpReqDto.from(signUpReqVo));
-        return new BaseResponseEntity<>(ResponseMessage.SIGN_UP_SUCCESS.getMessage());
+        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_SIGN_UP.getMessage());
     }
 
     /**
      * 2. 로그인
+     *
      * @param signInReqVo
      * @return
      */
@@ -60,22 +59,23 @@ public class AuthController {
             @Valid @RequestBody SignInReqVo signInReqVo
     ) {
         return new BaseResponseEntity<>(
-                ResponseMessage.SIGN_IN_SUCCESS.getMessage(),
+                ResponseMessage.SUCCESS_SIGN_IN.getMessage(),
                 authService.signIn(SignInReqDto.from(signInReqVo)).toVo()
         );
     }
 
     /**
      * 3. 이메일 중복 검사
+     *
      * @param emailReqVo
      * @return
      */
     @Operation(summary = "이메일 중복 검사")
     @PostMapping("/email/check-duplicate")
-    public Void checkEmailDuplicate(
+    public BaseResponseEntity<Void> checkEmailDuplicate(
             @Valid @RequestBody EmailReqVo emailReqVo
     ) {
         authService.checkEmailDuplicate(EmailReqDto.from(emailReqVo));
-        return null;
+        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHECK_EMAIL_DUPLICATE.getMessage());
     }
 }

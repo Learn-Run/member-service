@@ -17,6 +17,7 @@ public class AuthUtils {
 
     /**
      * 토큰 생성
+     *
      * @param authentication
      * @return
      */
@@ -26,6 +27,7 @@ public class AuthUtils {
 
     /**
      * 인증
+     *
      * @param member
      * @param inputPassword
      * @return
