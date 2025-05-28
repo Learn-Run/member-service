@@ -15,7 +15,7 @@ public class SignUpReqVo {
     @NotBlank(message = "아이디를 입력해주세요.")
     private String loginId;
 
-    @Size(min = 8, message = "비밀번호는 최소 8글자 이상으로 입력해주세요.")
+    @Size(min = 8, message = "비밀번호는 8글자 이상으로 입력해주세요.")
     @Size(max = 20, message = "비밀번호은 20글자 이하로 입력해주세요.")
     @Pattern(
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*]).*$",
