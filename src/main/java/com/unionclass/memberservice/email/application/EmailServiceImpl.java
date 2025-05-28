@@ -8,6 +8,8 @@ import com.unionclass.memberservice.email.util.EmailTemplateProvider;
 import com.unionclass.memberservice.common.redis.RedisUtils;
 import com.unionclass.memberservice.email.dto.in.EmailReqDto;
 import com.unionclass.memberservice.email.util.EmailUtils;
+import com.unionclass.memberservice.member.application.MemberService;
+import com.unionclass.memberservice.member.dto.in.ResetPasswordReqDto;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ public class EmailServiceImpl implements EmailService {
     private final EmailUtils emailUtils;
     private final EmailTemplateProvider emailTemplateProvider;
     private final JavaMailSender mailSender;
+    private final MemberService memberService;
 
     private static final String EMAIL_VERIFY_KEY_PREFIX = "verify:email:";
     private static final long EMAIL_CODE_TTL = 5L;
@@ -38,6 +41,7 @@ public class EmailServiceImpl implements EmailService {
      *
      * 1. 메일 인증코드 발송
      * 2. 메일 인증코드 검증
+     * 3. 임시 비밀번호 발급
      */
 
     /**
@@ -95,20 +99,26 @@ public class EmailServiceImpl implements EmailService {
         log.info("메일 인증코드 검증 성공 - 이메일 : {}", emailCodeReqDto.getEmail());
     }
 
+    /**
+     * 3. 임시 비밀번호 발급
+     *
+     * @param emailReqDto
+     */
     @Transactional
     @Override
     public void sendTemporaryPassword(EmailReqDto emailReqDto) {
 
-        // TODO : 임시 비밀번호를 회읜의 비밀번호로 저장해야함
+        String temporaryPassword = emailUtils.generateRandomPassword(PASSWORD_LENGTH);
+
+        memberService.resetPasswordWithTemporary(
+                ResetPasswordReqDto.of(emailReqDto.getEmail(), temporaryPassword));
 
         try {
             mailSender.send(
                     emailUtils.createMessage(
                             emailReqDto.getEmail(),
                             EmailTitle.TEMPORARY_PASSWORD.getEmailTitle(),
-                            emailTemplateProvider.getTemporaryPasswordByEmailTemplate(
-                                    emailUtils.generateRandomPassword(PASSWORD_LENGTH)
-                            )
+                            emailTemplateProvider.getTemporaryPasswordByEmailTemplate(temporaryPassword)
                     )
             );
             log.info("임시 비밀번호 발급 성공 - 수신자: {}", emailReqDto.getEmail());

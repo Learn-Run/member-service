@@ -22,7 +22,7 @@ import java.io.UnsupportedEncodingException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/email")
-@Tag(name = "auth")
+@Tag(name = "email")
 public class EmailController {
 
     private final EmailService emailService;
@@ -101,6 +101,12 @@ public class EmailController {
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_VERIFY_EMAIL_CODE.getMessage());
     }
 
+    /**
+     * 3. 임시 비밀번호 발급
+     *
+     * @param emailReqVo
+     * @return
+     */
     @Operation(
             summary = "임시 비밀번호 발급",
             description = """
