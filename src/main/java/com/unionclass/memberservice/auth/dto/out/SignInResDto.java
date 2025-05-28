@@ -19,9 +19,16 @@ public class SignInResDto {
         this.accessToken = accessToken;
     }
 
-    public static SignInResDto from(Member member, String accessToken) {
+    public static SignInResDto of(Member member, String accessToken) {
         return SignInResDto.builder()
                 .memberUuid(member.getMemberUuid())
+                .accessToken(accessToken)
+                .build();
+    }
+
+    public static SignInResDto of(String memberUuid, String accessToken) {
+        return SignInResDto.builder()
+                .memberUuid(memberUuid)
                 .accessToken(accessToken)
                 .build();
     }

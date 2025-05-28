@@ -64,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             Member member = memberRepository.findByLoginId(signInReqDto.getLoginId())
                     .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_SIGN_IN));
-            return SignInResDto.from(
+            return SignInResDto.of(
                     member,
                     authUtils.createToken(authUtils.authenticate(member, signInReqDto.getPassword())).substring(7));
         } catch (Exception e) {

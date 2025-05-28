@@ -39,7 +39,8 @@ public class SecurityConfig {
                                         "/error",
                                         "/api/v1/api-docs/**",
                                         "/api/v1/auth/**",
-                                        "/api/v1/email/**"
+                                        "/api/v1/email/**",
+                                        "/api/v1/oauth/**"
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()
