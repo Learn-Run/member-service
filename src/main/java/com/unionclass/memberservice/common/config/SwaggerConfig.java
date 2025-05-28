@@ -1,5 +1,7 @@
 package com.unionclass.memberservice.common.config;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -9,6 +11,13 @@ import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@OpenAPIDefinition(
+        tags = {
+                @Tag(name = "auth", description = "인증 관련 API 입니다."),
+                @Tag(name = "email", description = "이메일 관련 API 입니다."),
+                @Tag(name = "member", description = "회원정보 관련 API 입니다.")
+        }
+)
 @Configuration
 public class SwaggerConfig {
 
