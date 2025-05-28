@@ -71,14 +71,6 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
-            echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" > .env
-            echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
-            echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
-            echo "MAIL_APP_PASSWORD=${{ secrets.MAIL_APP_PASSWORD }}" >> .env
-            echo "MAIL_SENDER_ADDRESS=${{ secrets.MAIL_SENDER_ADDRESS }}" >> .env
-            echo "MAIL_SENDER_NAME=${{ secrets.MAIL_SENDER_NAME }}" >> .env
-            echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
-            
             docker pull ${{ steps.login-ecr.outputs.registry }}/learn-run/member-service:latest
             docker-compose -f docker-compose-member.yml down
             docker-compose -f docker-compose-member.yml up -d
