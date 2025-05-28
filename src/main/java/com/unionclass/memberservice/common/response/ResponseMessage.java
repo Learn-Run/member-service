@@ -15,7 +15,9 @@ public enum ResponseMessage {
     SUCCESS_CHECK_LOGIN_ID_DUPLICATE("아이디 중복 검사에 성공하였습니다."),
     SUCCESS_CHECK_NICKNAME_DUPLICATE("닉네임 중복 검사에 성공하였습니다."),
     SUCCESS_SEND_TEMPORARY_PASSWORD("임시 비밀번호 발급에 성공하였습니다."),
-    SUCCESS_CHANGE_PASSWORD("비밀번호 변경에 성공하였습니다.")
+    SUCCESS_CHANGE_PASSWORD("비밀번호 변경에 성공하였습니다."),
+    SUCCESS_SIGN_IN_WITH_OAUTH("소셜 로그인에 성공하였습니다."),
+    SUCCESS_BIND_OAUTH_ACCOUNT("OAuth 계정 연동에 성공하였습니다.")
     ;
 
     private final String message;

@@ -57,7 +57,7 @@ public class MemberController {
             @RequestHeader("X-Member-UUID") String memberUuid,
             @Valid @RequestBody ChangePasswordReqVo passwordReqVo
     ) {
-        memberService.changePassword(ChangePasswordReqDto.from(memberUuid, passwordReqVo));
+        memberService.changePassword(ChangePasswordReqDto.of(memberUuid, passwordReqVo));
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHANGE_PASSWORD.getMessage());
     }
 }
