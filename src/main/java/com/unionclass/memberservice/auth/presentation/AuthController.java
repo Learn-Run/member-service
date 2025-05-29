@@ -50,7 +50,7 @@ public class AuthController {
             description = """
     회원가입을 위한 요청 정보입니다.
 
-    - loginId: 4~20자, 공백 불가
+    - account: 4~20자, 공백 불가
     - password: 8~20자, 대문자/소문자/숫자/특수문자 포함 필수
     - email: 유효한 이메일 형식
     - birthDate: yyyy-MM-dd 형식, 생년월일 필수
@@ -80,7 +80,7 @@ public class AuthController {
     인증에 성공하면 JWT 토큰을 반환합니다.
 
     [요청 조건]
-    - loginId : 4~20자 (필수 입력)
+    - account : 4~20자 (필수 입력)
     - password : 최소 8자 이상, 대/소문자 + 숫자 + 특수문자 포함 필수 (필수 입력)
 
     [인증 실패]
@@ -124,16 +124,16 @@ public class AuthController {
     /**
      * 4. 아이디 중복 검사
      *
-     * @param loginIdReqVo
+     * @param accountReqVo
      * @return
      */
     @Operation(
             summary = "아이디 중복 검사",
             description = """
-    사용자가 입력한 아이디(loginId)가 이미 가입된 아이디인지 검사합니다.
+    사용자가 입력한 아이디(account)가 이미 가입된 아이디인지 검사합니다.
 
     [요청 조건]
-    - loginId: 필수 입력, 공백 불가
+    - account: 필수 입력, 공백 불가
 
     [처리 방식]
     - 아이디로 회원을 조회하여 존재 여부를 확인합니다.
@@ -141,7 +141,7 @@ public class AuthController {
     - 존재하지 않으면 중복되지 않은 것으로 간주하고 성공 응답을 반환합니다.
 
     [예외 코드]
-    - LOGIN_ID_ALREADY_EXISTS: 중복된 아이디일 경우
+    - ACCOUNT_ALREADY_EXISTS: 중복된 아이디일 경우
     """
     )
     @PostMapping("/account/check-duplicate")

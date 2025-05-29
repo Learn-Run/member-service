@@ -33,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
      * 1. 회원가입
      * 2. 로그인
      * 3. 이메일 중복 검사
-     * 4. 아이디 중복 검사
+     * 4. 계정 중복 검사
      * 5. 닉네임 중복 검사
      */
 
@@ -87,17 +87,17 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
-     * 4. 아이디 중복 검사
+     * 4. 계정 중복 검사
      *
-     * @param loginIdReqDto
+     * @param accountReqDto
      */
     @Override
-    public void checkAccountDuplicate(AccountReqDto loginIdReqDto) {
-        if (memberRepository.findByAccount(loginIdReqDto.getAccount()).isPresent()) {
-            log.warn("아이디 중복됨 - 입력 아이디: {}", loginIdReqDto.getAccount());
-            throw new BaseException(ErrorCode.LOGIN_ID_ALREADY_EXISTS);
+    public void checkAccountDuplicate(AccountReqDto accountReqDto) {
+        if (memberRepository.findByAccount(accountReqDto.getAccount()).isPresent()) {
+            log.warn("아이디 중복됨 - 입력 아이디: {}", accountReqDto.getAccount());
+            throw new BaseException(ErrorCode.ACCOUNT_ALREADY_EXISTS);
         }
-        log.info("아이디 중복 없음 - 입력 아이디: {}", loginIdReqDto.getAccount());
+        log.info("아이디 중복 없음 - 입력 아이디: {}", accountReqDto.getAccount());
     }
 
     /**
