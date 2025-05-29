@@ -77,6 +77,15 @@ public class MemberOAuthServiceImpl implements  MemberOAuthService {
             throw new BaseException(ErrorCode.OAUTH_ACCOUNT_ALREADY_BOUND);
         }
 
+        if (memberOAuthRepository.existsByMemberUuidAndProvider(
+                bindOAuthAccountReqDto.getMemberUuid(),
+                bindOAuthAccountReqDto.getProvider()
+        )) {
+            log.warn("해당 사용자는 이미 이 provider({})에 대해 다른 계정을 연동했습니다 - memberUuid: {}",
+                    bindOAuthAccountReqDto.getProvider(), bindOAuthAccountReqDto.getMemberUuid());
+            throw new BaseException(ErrorCode.OAUTH_PROVIDER_ALREADY_BOUND);
+        }
+
         memberOAuthRepository.save(bindOAuthAccountReqDto.toEntity());
         log.info("OAuth 계정 연동 완료 - provider: {}, accountId: {}, memberUuid: {}",
                 bindOAuthAccountReqDto.getProvider(),

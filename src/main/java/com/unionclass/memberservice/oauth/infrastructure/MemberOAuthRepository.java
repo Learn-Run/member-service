@@ -10,4 +10,5 @@ public interface MemberOAuthRepository extends JpaRepository<MemberOAuth, Long> 
 
     Optional<MemberOAuth> findByProviderAndProviderAccountId(Provider provider, String providerAccountId);
     boolean existsByProviderAndProviderAccountId(Provider provider, String providerAccountId);
+    boolean existsByMemberUuidAndProvider(String memberUuid, Provider provider);
 }
