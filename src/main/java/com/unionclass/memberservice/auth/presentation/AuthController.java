@@ -53,6 +53,7 @@ public class AuthController {
     - account: 4~20자, 공백 불가
     - password: 8~20자, 대문자/소문자/숫자/특수문자 포함 필수
     - email: 유효한 이메일 형식
+    - name: 이름
     - birthDate: yyyy-MM-dd 형식, 생년월일 필수
     - gender: 남성 또는 여성
     - nickname: 2~12자, 공백 불가
