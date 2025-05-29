@@ -76,7 +76,7 @@ public class AuthController {
     @Operation(
             summary = "로그인",
             description = """
-    사용자의 아이디와 비밀번호를 입력받아 로그인을 수행합니다.
+    사용자의 계정과 비밀번호를 입력받아 로그인을 수행합니다.
     인증에 성공하면 JWT 토큰을 반환합니다.
 
     [요청 조건]
@@ -128,20 +128,20 @@ public class AuthController {
      * @return
      */
     @Operation(
-            summary = "아이디 중복 검사",
+            summary = "계정 중복 검사",
             description = """
-    사용자가 입력한 아이디(account)가 이미 가입된 아이디인지 검사합니다.
+    사용자가 입력한 계정(account)이 이미 가입된 계정인지 검사합니다.
 
     [요청 조건]
     - account: 필수 입력, 공백 불가
 
     [처리 방식]
-    - 아이디로 회원을 조회하여 존재 여부를 확인합니다.
+    - 계정으로 회원을 조회하여 존재 여부를 확인합니다.
     - 이미 존재하는 경우 예외를 발생시킵니다.
     - 존재하지 않으면 중복되지 않은 것으로 간주하고 성공 응답을 반환합니다.
 
     [예외 코드]
-    - ACCOUNT_ALREADY_EXISTS: 중복된 아이디일 경우
+    - ACCOUNT_ALREADY_EXISTS: 중복된 계정일 경우
     """
     )
     @PostMapping("/account/check-duplicate")

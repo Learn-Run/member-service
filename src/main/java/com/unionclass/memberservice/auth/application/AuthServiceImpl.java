@@ -95,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
     public void checkAccountDuplicate(AccountReqDto accountReqDto) {
         if (memberRepository.findByAccount(accountReqDto.getAccount()).isPresent()) {
             log.warn("아이디 중복됨 - 입력 아이디: {}", accountReqDto.getAccount());
-            throw new BaseException(ErrorCode.ACCOUNT_ALREADY_EXISTS);
+            throw new BaseException(ErrorCode.LOGIN_ID_ALREADY_EXISTS);
         }
         log.info("아이디 중복 없음 - 입력 아이디: {}", accountReqDto.getAccount());
     }
