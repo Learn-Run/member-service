@@ -13,7 +13,7 @@ public class SignUpReqVo {
     @Size(min = 4, message = "아이디는 4글자 이상으로 입력해주세요.")
     @Size(max = 20, message = "아이디는 20글자 이하로 입력해주세요.")
     @NotBlank(message = "아이디를 입력해주세요.")
-    private String loginId;
+    private String account;
 
     @Size(min = 8, message = "비밀번호는 8글자 이상으로 입력해주세요.")
     @Size(max = 20, message = "비밀번호은 20글자 이하로 입력해주세요.")
@@ -28,6 +28,8 @@ public class SignUpReqVo {
     @NotBlank(message = "이메일을 입력해주세요.")
     private String email;
 
+    @NotNull(message = "이름을 입력해주세요.")
+    private String name;
     @NotNull(message = "생년월일을 입력해주세요.")
     private LocalDate birthDate;
 

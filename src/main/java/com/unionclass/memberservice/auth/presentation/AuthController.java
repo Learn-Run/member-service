@@ -1,11 +1,11 @@
 package com.unionclass.memberservice.auth.presentation;
 
 import com.unionclass.memberservice.auth.application.AuthService;
-import com.unionclass.memberservice.auth.dto.in.LoginIdReqDto;
+import com.unionclass.memberservice.auth.dto.in.AccountReqDto;
 import com.unionclass.memberservice.auth.dto.in.NicknameReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignUpReqDto;
-import com.unionclass.memberservice.auth.vo.in.LoginIdReqVo;
+import com.unionclass.memberservice.auth.vo.in.AccountReqVo;
 import com.unionclass.memberservice.auth.vo.in.NicknameReqVo;
 import com.unionclass.memberservice.auth.vo.in.SignInReqVo;
 import com.unionclass.memberservice.auth.vo.in.SignUpReqVo;
@@ -36,6 +36,7 @@ public class AuthController {
      * 3. 이메일 중복 검사
      * 4. 아이디 중복 검사
      * 5. 닉네임 중복 검사
+     * 6.
      */
 
     /**
@@ -49,9 +50,10 @@ public class AuthController {
             description = """
     회원가입을 위한 요청 정보입니다.
 
-    - loginId: 4~20자, 공백 불가
+    - account: 4~20자, 공백 불가
     - password: 8~20자, 대문자/소문자/숫자/특수문자 포함 필수
     - email: 유효한 이메일 형식
+    - name: 이름
     - birthDate: yyyy-MM-dd 형식, 생년월일 필수
     - gender: 남성 또는 여성
     - nickname: 2~12자, 공백 불가
@@ -75,11 +77,11 @@ public class AuthController {
     @Operation(
             summary = "로그인",
             description = """
-    사용자의 아이디와 비밀번호를 입력받아 로그인을 수행합니다.
+    사용자의 계정과 비밀번호를 입력받아 로그인을 수행합니다.
     인증에 성공하면 JWT 토큰을 반환합니다.
 
     [요청 조건]
-    - loginId : 4~20자 (필수 입력)
+    - account : 4~20자 (필수 입력)
     - password : 최소 8자 이상, 대/소문자 + 숫자 + 특수문자 포함 필수 (필수 입력)
 
     [인증 실패]
@@ -123,32 +125,32 @@ public class AuthController {
     /**
      * 4. 아이디 중복 검사
      *
-     * @param loginIdReqVo
+     * @param accountReqVo
      * @return
      */
     @Operation(
-            summary = "아이디 중복 검사",
+            summary = "계정 중복 검사",
             description = """
-    사용자가 입력한 아이디(loginId)가 이미 가입된 아이디인지 검사합니다.
+    사용자가 입력한 계정(account)이 이미 가입된 계정인지 검사합니다.
 
     [요청 조건]
-    - loginId: 필수 입력, 공백 불가
+    - account: 필수 입력, 공백 불가
 
     [처리 방식]
-    - 아이디로 회원을 조회하여 존재 여부를 확인합니다.
+    - 계정으로 회원을 조회하여 존재 여부를 확인합니다.
     - 이미 존재하는 경우 예외를 발생시킵니다.
     - 존재하지 않으면 중복되지 않은 것으로 간주하고 성공 응답을 반환합니다.
 
     [예외 코드]
-    - LOGIN_ID_ALREADY_EXISTS: 중복된 아이디일 경우
+    - ACCOUNT_ALREADY_EXISTS: 중복된 계정일 경우
     """
     )
-    @PostMapping("/loginId/check-duplicate")
-    public BaseResponseEntity<Void> checkLoginIdDuplicate(
-            @Valid @RequestBody LoginIdReqVo loginIdReqVo
+    @PostMapping("/account/check-duplicate")
+    public BaseResponseEntity<Void> checkAccountDuplicate(
+            @Valid @RequestBody AccountReqVo accountReqVo
     ) {
-        authService.checkLoginIdDuplicate(LoginIdReqDto.from(loginIdReqVo));
-        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHECK_LOGIN_ID_DUPLICATE.getMessage());
+        authService.checkAccountDuplicate(AccountReqDto.from(accountReqVo));
+        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHECK_ACCOUNT_DUPLICATE.getMessage());
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.unionclass.memberservice.auth.application;
 
-import com.unionclass.memberservice.auth.dto.in.LoginIdReqDto;
+import com.unionclass.memberservice.auth.dto.in.AccountReqDto;
 import com.unionclass.memberservice.auth.dto.in.NicknameReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignUpReqDto;
@@ -33,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
      * 1. 회원가입
      * 2. 로그인
      * 3. 이메일 중복 검사
-     * 4. 아이디 중복 검사
+     * 4. 계정 중복 검사
      * 5. 닉네임 중복 검사
      */
 
@@ -62,9 +62,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public SignInResDto signIn(SignInReqDto signInReqDto) {
         try {
-            Member member = memberRepository.findByLoginId(signInReqDto.getLoginId())
+            Member member = memberRepository.findByAccount(signInReqDto.getAccount())
                     .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_SIGN_IN));
-            return SignInResDto.from(
+            return SignInResDto.of(
                     member,
                     authUtils.createToken(authUtils.authenticate(member, signInReqDto.getPassword())).substring(7));
         } catch (Exception e) {
@@ -87,17 +87,17 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
-     * 4. 아이디 중복 검사
+     * 4. 계정 중복 검사
      *
-     * @param loginIdReqDto
+     * @param accountReqDto
      */
     @Override
-    public void checkLoginIdDuplicate(LoginIdReqDto loginIdReqDto) {
-        if (memberRepository.findByLoginId(loginIdReqDto.getLoginId()).isPresent()) {
-            log.warn("아이디 중복됨 - 입력 아이디: {}", loginIdReqDto.getLoginId());
-            throw new BaseException(ErrorCode.LOGIN_ID_ALREADY_EXISTS);
+    public void checkAccountDuplicate(AccountReqDto accountReqDto) {
+        if (memberRepository.findByAccount(accountReqDto.getAccount()).isPresent()) {
+            log.warn("아이디 중복됨 - 입력 아이디: {}", accountReqDto.getAccount());
+            throw new BaseException(ErrorCode.ACCOUNT_ALREADY_EXISTS);
         }
-        log.info("아이디 중복 없음 - 입력 아이디: {}", loginIdReqDto.getLoginId());
+        log.info("아이디 중복 없음 - 입력 아이디: {}", accountReqDto.getAccount());
     }
 
     /**

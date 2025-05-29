@@ -20,7 +20,7 @@ public class ChangePasswordReqDto {
         this.newPassword = newPassword;
     }
 
-    public static ChangePasswordReqDto from(String memberUuid, ChangePasswordReqVo passwordReqVo) {
+    public static ChangePasswordReqDto of(String memberUuid, ChangePasswordReqVo passwordReqVo) {
         return ChangePasswordReqDto.builder()
                 .memberUuid(memberUuid)
                 .currentPassword(passwordReqVo.getCurrentPassword())
