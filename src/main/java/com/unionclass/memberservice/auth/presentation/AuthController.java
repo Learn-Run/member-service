@@ -1,11 +1,11 @@
 package com.unionclass.memberservice.auth.presentation;
 
 import com.unionclass.memberservice.auth.application.AuthService;
-import com.unionclass.memberservice.auth.dto.in.LoginIdReqDto;
+import com.unionclass.memberservice.auth.dto.in.AccountReqDto;
 import com.unionclass.memberservice.auth.dto.in.NicknameReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignUpReqDto;
-import com.unionclass.memberservice.auth.vo.in.LoginIdReqVo;
+import com.unionclass.memberservice.auth.vo.in.AccountReqVo;
 import com.unionclass.memberservice.auth.vo.in.NicknameReqVo;
 import com.unionclass.memberservice.auth.vo.in.SignInReqVo;
 import com.unionclass.memberservice.auth.vo.in.SignUpReqVo;
@@ -146,9 +146,9 @@ public class AuthController {
     )
     @PostMapping("/loginId/check-duplicate")
     public BaseResponseEntity<Void> checkLoginIdDuplicate(
-            @Valid @RequestBody LoginIdReqVo loginIdReqVo
+            @Valid @RequestBody AccountReqVo loginIdReqVo
     ) {
-        authService.checkLoginIdDuplicate(LoginIdReqDto.from(loginIdReqVo));
+        authService.checkLoginIdDuplicate(AccountReqDto.from(loginIdReqVo));
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHECK_LOGIN_ID_DUPLICATE.getMessage());
     }
 

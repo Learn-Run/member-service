@@ -9,18 +9,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SignInReqDto {
 
-    private String loginId;
+    private String account;
     private String password;
 
     @Builder
-    public SignInReqDto(String loginId, String password) {
-        this.loginId = loginId;
+    public SignInReqDto(String account, String password) {
+        this.account = account;
         this.password = password;
     }
 
     public static SignInReqDto from(SignInReqVo signInReqVo) {
         return SignInReqDto.builder()
-                .loginId(signInReqVo.getLoginId())
+                .account(signInReqVo.getAccount())
                 .password(signInReqVo.getPassword())
                 .build();
     }

@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class SignUpReqDto {
 
-    private String loginId;
+    private String account;
     private String password;
     private String email;
     private LocalDate birthDate;
@@ -25,10 +25,10 @@ public class SignUpReqDto {
 
     @Builder
     public SignUpReqDto(
-            String loginId, String password, String email, LocalDate birthDate,
+            String account, String password, String email, LocalDate birthDate,
             Gender gender, String nickname, UserRole userRole
     ) {
-        this.loginId = loginId;
+        this.account = account;
         this.password = password;
         this.email = email;
         this.birthDate = birthDate;
@@ -39,7 +39,7 @@ public class SignUpReqDto {
 
     public static SignUpReqDto from(SignUpReqVo signUpReqVo) {
         return SignUpReqDto.builder()
-                .loginId(signUpReqVo.getLoginId())
+                .account(signUpReqVo.getAccount())
                 .password(signUpReqVo.getPassword())
                 .email(signUpReqVo.getEmail())
                 .birthDate(signUpReqVo.getBirthDate())
@@ -52,7 +52,7 @@ public class SignUpReqDto {
     public Member toEntity(String inputPassword) {
         return Member.builder()
                 .memberUuid(UUID.randomUUID().toString())
-                .loginId(loginId)
+                .account(account)
                 .password(inputPassword)
                 .email(email)
                 .birthDate(birthDate)

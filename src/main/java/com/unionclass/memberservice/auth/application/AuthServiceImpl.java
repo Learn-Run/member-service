@@ -1,6 +1,6 @@
 package com.unionclass.memberservice.auth.application;
 
-import com.unionclass.memberservice.auth.dto.in.LoginIdReqDto;
+import com.unionclass.memberservice.auth.dto.in.AccountReqDto;
 import com.unionclass.memberservice.auth.dto.in.NicknameReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignUpReqDto;
@@ -62,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public SignInResDto signIn(SignInReqDto signInReqDto) {
         try {
-            Member member = memberRepository.findByLoginId(signInReqDto.getLoginId())
+            Member member = memberRepository.findByAccount(signInReqDto.getAccount())
                     .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_SIGN_IN));
             return SignInResDto.of(
                     member,
@@ -92,8 +92,8 @@ public class AuthServiceImpl implements AuthService {
      * @param loginIdReqDto
      */
     @Override
-    public void checkLoginIdDuplicate(LoginIdReqDto loginIdReqDto) {
-        if (memberRepository.findByLoginId(loginIdReqDto.getLoginId()).isPresent()) {
+    public void checkAccountDuplicate(AccountReqDto loginIdReqDto) {
+        if (memberRepository.findByAccount(loginIdReqDto.getLoginId()).isPresent()) {
             log.warn("아이디 중복됨 - 입력 아이디: {}", loginIdReqDto.getLoginId());
             throw new BaseException(ErrorCode.LOGIN_ID_ALREADY_EXISTS);
         }
