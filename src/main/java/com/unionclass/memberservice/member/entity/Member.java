@@ -25,6 +25,7 @@ public class Member extends BaseEntity {
     private String account;
     private String password;
     private String email;
+    private String name;
     private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
@@ -42,14 +43,15 @@ public class Member extends BaseEntity {
 
     @Builder
     public Member(
-            Long id, String memberUuid, String account, String password, String email, LocalDate birthDate,
-            Gender gender, String nickname, UserRole userRole, Boolean deletedStatus, LocalDateTime deletedAt
-    ) {
+            Long id, String memberUuid, String account, String password,
+            String email, String name, LocalDate birthDate, Gender gender, String nickname,
+            UserRole userRole, Boolean deletedStatus, LocalDateTime deletedAt) {
         this.id = id;
         this.memberUuid = memberUuid;
         this.account = account;
         this.password = password;
         this.email = email;
+        this.name = name;
         this.birthDate = birthDate;
         this.gender = gender;
         this.nickname = nickname;

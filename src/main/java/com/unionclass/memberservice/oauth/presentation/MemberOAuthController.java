@@ -75,6 +75,13 @@ public class MemberOAuthController {
             description = """
     회원의 계정에 외부 소셜 계정(OAuth)을 연동합니다.
     
+    [요구 상황]
+    - 이미 회원가입을 했던 회원이 OAuth 를 통해 로그인하려는 경우
+      → 로그인 후, 이 API 를 호출하여 OAuth 계정을 연동해야 합니다.
+    
+    - 우리 서비스에 회원가입하지 않은 사람이 OAuth 를 통해 로그인하려는 경우
+      → 먼저 회원가입을 통해 memberUuid 를 발급받은 후, 즉시 이 API 를 호출해 OAuth 계정을 연동합니다.
+    
     [요청 헤더]
     - X-Member-UUID: 필수 입력, 현재 로그인할 사용자의 UUID
     

@@ -55,6 +55,7 @@ public class MemberOAuthServiceImpl implements  MemberOAuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String accessToken = authUtils.createToken(authentication);
 
+        log.info("OAuth 로그인 성공 - memberUuid: {}", memberOAuth.getMemberUuid());
         return SignInResDto.of(memberOAuth.getMemberUuid(), accessToken);
     }
 
