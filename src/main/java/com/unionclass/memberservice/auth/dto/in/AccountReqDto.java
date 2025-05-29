@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AccountReqDto {
 
-    private String loginId;
+    private String account;
 
     @Builder
-    public AccountReqDto(String loginId) { this.loginId = loginId; }
+    public AccountReqDto(String account) { this.account = account; }
 
     public static AccountReqDto from(AccountReqVo loginIdReqVo) {
         return AccountReqDto.builder()
-                .loginId(loginIdReqVo.getLoginId())
+                .account(loginIdReqVo.getAccount())
                 .build();
     }
 }

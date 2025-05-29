@@ -144,12 +144,12 @@ public class AuthController {
     - LOGIN_ID_ALREADY_EXISTS: 중복된 아이디일 경우
     """
     )
-    @PostMapping("/loginId/check-duplicate")
-    public BaseResponseEntity<Void> checkLoginIdDuplicate(
-            @Valid @RequestBody AccountReqVo loginIdReqVo
+    @PostMapping("/account/check-duplicate")
+    public BaseResponseEntity<Void> checkAccountDuplicate(
+            @Valid @RequestBody AccountReqVo accountReqVo
     ) {
-        authService.checkLoginIdDuplicate(AccountReqDto.from(loginIdReqVo));
-        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHECK_LOGIN_ID_DUPLICATE.getMessage());
+        authService.checkAccountDuplicate(AccountReqDto.from(accountReqVo));
+        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHECK_ACCOUNT_DUPLICATE.getMessage());
     }
 
     /**
