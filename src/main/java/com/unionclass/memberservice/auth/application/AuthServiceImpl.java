@@ -4,6 +4,7 @@ import com.unionclass.memberservice.auth.dto.in.AccountReqDto;
 import com.unionclass.memberservice.auth.dto.in.NicknameReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignUpReqDto;
+import com.unionclass.memberservice.auth.dto.out.MemberUuidResDto;
 import com.unionclass.memberservice.auth.dto.out.SignInResDto;
 import com.unionclass.memberservice.auth.util.AuthUtils;
 import com.unionclass.memberservice.common.exception.BaseException;
@@ -46,7 +47,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void signUp(SignUpReqDto signUpReqDto) {
         try {
-            memberRepository.save(signUpReqDto.toEntity(passwordEncoder.encode(signUpReqDto.getPassword())));
+            memberRepository.save(
+                    signUpReqDto.toEntity(passwordEncoder.encode(signUpReqDto.getPassword()))
+            );
         } catch (Exception e) {
             throw new BaseException(ErrorCode.FAILED_TO_SIGN_UP);
         }
@@ -112,5 +115,19 @@ public class AuthServiceImpl implements AuthService {
             throw new BaseException(ErrorCode.NICKNAME_ALREADY_EXISTS);
         }
         log.info("닉네임 중복 없음 - 입력 닉네임: {}", nicknameReqDto.getNickname());
+    }
+
+    @Transactional
+    @Override
+    public MemberUuidResDto signUpAndReturnMemberUuid(SignUpReqDto signUpReqDto) {
+        try {
+            return MemberUuidResDto.from(
+                    memberRepository.save(
+                            signUpReqDto.toEntity(passwordEncoder.encode(signUpReqDto.getPassword()))
+                    )
+            );
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.FAILED_TO_SIGN_UP);
+        }
     }
 }

@@ -1,12 +1,14 @@
 package com.unionclass.memberservice.oauth.application;
 
+import com.unionclass.memberservice.auth.application.AuthService;
+import com.unionclass.memberservice.auth.dto.in.SignUpReqDto;
 import com.unionclass.memberservice.auth.dto.out.SignInResDto;
 import com.unionclass.memberservice.auth.util.AuthUtils;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
 import com.unionclass.memberservice.common.security.CustomUserDetailsService;
-import com.unionclass.memberservice.oauth.dto.in.BindOAuthAccountReqDto;
 import com.unionclass.memberservice.oauth.dto.in.ProviderReqDto;
+import com.unionclass.memberservice.oauth.dto.in.SignUpWithOAuthReqDto;
 import com.unionclass.memberservice.oauth.entity.MemberOAuth;
 import com.unionclass.memberservice.oauth.infrastructure.MemberOAuthRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +27,13 @@ public class MemberOAuthServiceImpl implements  MemberOAuthService {
     private final MemberOAuthRepository memberOAuthRepository;
     private final CustomUserDetailsService customUserDetailsService;
     private final AuthUtils authUtils;
+    private final AuthService authService;
 
     /**
      * /api/v1/oauth
      *
      * 1. 소셜 로그인
-     * 2. OAuth 계정 연동
+     * 2. 소셜 회원가입
      */
 
     /**
@@ -60,37 +63,30 @@ public class MemberOAuthServiceImpl implements  MemberOAuthService {
     }
 
     /**
-     * 2. OAuth 계정 연동
+     * 2. 소셜 회원가입
      *
-     * @param bindOAuthAccountReqDto
+     * @param signUpWithOAuthReqDto
      */
     @Transactional
     @Override
-    public void bindOAuthAccount(BindOAuthAccountReqDto bindOAuthAccountReqDto) {
+    public void signUpWithOAuth(SignUpWithOAuthReqDto signUpWithOAuthReqDto) {
 
         if (memberOAuthRepository.existsByProviderAndProviderAccountId(
-                bindOAuthAccountReqDto.getProvider(),
-                bindOAuthAccountReqDto.getProviderAccountId()
+                signUpWithOAuthReqDto.getProvider(),
+                signUpWithOAuthReqDto.getProviderAccountId()
         )) {
             log.warn("이미 연동된 OAuth 계정이 존재 - provider: {}, accountId: {}",
-                    bindOAuthAccountReqDto.getProvider(), bindOAuthAccountReqDto.getProviderAccountId());
+                    signUpWithOAuthReqDto.getProvider(), signUpWithOAuthReqDto.getProviderAccountId());
             throw new BaseException(ErrorCode.OAUTH_ACCOUNT_ALREADY_BOUND);
         }
 
-        if (memberOAuthRepository.existsByMemberUuidAndProvider(
-                bindOAuthAccountReqDto.getMemberUuid(),
-                bindOAuthAccountReqDto.getProvider()
-        )) {
-            log.warn("해당 사용자는 이미 이 provider({})에 대해 다른 계정을 연동했습니다 - memberUuid: {}",
-                    bindOAuthAccountReqDto.getProvider(), bindOAuthAccountReqDto.getMemberUuid());
-            throw new BaseException(ErrorCode.OAUTH_PROVIDER_ALREADY_BOUND);
-        }
+        String memberUuid = authService.signUpAndReturnMemberUuid(SignUpReqDto.from(signUpWithOAuthReqDto)).getMemberUuid();
 
-        memberOAuthRepository.save(bindOAuthAccountReqDto.toEntity());
+        memberOAuthRepository.save(signUpWithOAuthReqDto.toEntity(memberUuid));
         log.info("OAuth 계정 연동 완료 - provider: {}, accountId: {}, memberUuid: {}",
-                bindOAuthAccountReqDto.getProvider(),
-                bindOAuthAccountReqDto.getProviderAccountId(),
-                bindOAuthAccountReqDto.getMemberUuid()
+                signUpWithOAuthReqDto.getProvider(),
+                signUpWithOAuthReqDto.getProviderAccountId(),
+                memberUuid
         );
     }
 }

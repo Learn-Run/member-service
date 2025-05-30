@@ -5,6 +5,7 @@ import com.unionclass.memberservice.auth.dto.in.NicknameReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignUpReqDto;
 import com.unionclass.memberservice.auth.dto.out.SignInResDto;
+import com.unionclass.memberservice.auth.dto.out.MemberUuidResDto;
 import com.unionclass.memberservice.email.dto.in.EmailReqDto;
 
 public interface AuthService {
@@ -14,4 +15,5 @@ public interface AuthService {
     void checkEmailDuplicate(EmailReqDto emailReqDto);
     void checkAccountDuplicate(AccountReqDto accountReqDto);
     void checkNicknameDuplicate(NicknameReqDto nicknameReqDto);
+    MemberUuidResDto signUpAndReturnMemberUuid(SignUpReqDto signUpReqDto);
 }

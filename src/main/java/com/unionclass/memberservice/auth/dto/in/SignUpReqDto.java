@@ -4,6 +4,7 @@ import com.unionclass.memberservice.auth.vo.in.SignUpReqVo;
 import com.unionclass.memberservice.member.entity.Member;
 import com.unionclass.memberservice.member.enums.Gender;
 import com.unionclass.memberservice.member.enums.UserRole;
+import com.unionclass.memberservice.oauth.dto.in.SignUpWithOAuthReqDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,6 +50,19 @@ public class SignUpReqDto {
                 .gender(signUpReqVo.getGender())
                 .nickname(signUpReqVo.getNickname())
                 .userRole(signUpReqVo.getUserRole())
+                .build();
+    }
+
+    public static SignUpReqDto from(SignUpWithOAuthReqDto signUpWithOAuthReqDto) {
+        return SignUpReqDto.builder()
+                .account(signUpWithOAuthReqDto.getAccount())
+                .password(signUpWithOAuthReqDto.getPassword())
+                .email(signUpWithOAuthReqDto.getEmail())
+                .name(signUpWithOAuthReqDto.getName())
+                .birthDate(signUpWithOAuthReqDto.getBirthDate())
+                .gender(signUpWithOAuthReqDto.getGender())
+                .nickname(signUpWithOAuthReqDto.getNickname())
+                .userRole(signUpWithOAuthReqDto.getUserRole())
                 .build();
     }
 
