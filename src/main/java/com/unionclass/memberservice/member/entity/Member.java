@@ -22,7 +22,7 @@ public class Member extends BaseEntity {
     private String memberUuid;
 
     @Column(unique = true)
-    private String account;
+    private String loginId;
     private String password;
     private String email;
     private String name;
@@ -43,12 +43,12 @@ public class Member extends BaseEntity {
 
     @Builder
     public Member(
-            Long id, String memberUuid, String account, String password,
+            Long id, String memberUuid, String loginId, String password,
             String email, String name, LocalDate birthDate, Gender gender, String nickname,
             UserRole userRole, Boolean deletedStatus, LocalDateTime deletedAt) {
         this.id = id;
         this.memberUuid = memberUuid;
-        this.account = account;
+        this.loginId = loginId;
         this.password = password;
         this.email = email;
         this.name = name;

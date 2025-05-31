@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class SignUpReqDto {
 
-    private String account;
+    private String loginId;
     private String password;
     private String email;
     private String name;
@@ -27,10 +27,10 @@ public class SignUpReqDto {
 
     @Builder
     public SignUpReqDto(
-            String account, String password, String email, String name,
+            String loginId, String password, String email, String name,
             LocalDate birthDate, Gender gender, String nickname, UserRole userRole
     ) {
-        this.account = account;
+        this.loginId = loginId;
         this.password = password;
         this.email = email;
         this.name = name;
@@ -42,7 +42,7 @@ public class SignUpReqDto {
 
     public static SignUpReqDto from(SignUpReqVo signUpReqVo) {
         return SignUpReqDto.builder()
-                .account(signUpReqVo.getAccount())
+                .loginId(signUpReqVo.getLoginId())
                 .password(signUpReqVo.getPassword())
                 .email(signUpReqVo.getEmail())
                 .name(signUpReqVo.getName())
@@ -55,7 +55,7 @@ public class SignUpReqDto {
 
     public static SignUpReqDto from(SignUpWithOAuthReqDto signUpWithOAuthReqDto) {
         return SignUpReqDto.builder()
-                .account(signUpWithOAuthReqDto.getAccount())
+                .loginId(signUpWithOAuthReqDto.getLoginId())
                 .password(signUpWithOAuthReqDto.getPassword())
                 .email(signUpWithOAuthReqDto.getEmail())
                 .name(signUpWithOAuthReqDto.getName())
@@ -69,7 +69,7 @@ public class SignUpReqDto {
     public Member toEntity(String inputPassword) {
         return Member.builder()
                 .memberUuid(UUID.randomUUID().toString())
-                .account(account)
+                .loginId(loginId)
                 .password(inputPassword)
                 .email(email)
                 .name(name)

@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class SignUpWithOAuthReqDto {
 
-    private String account;
+    private String loginId;
     private String password;
     private String email;
     private String name;
@@ -28,10 +28,10 @@ public class SignUpWithOAuthReqDto {
 
     @Builder
     public SignUpWithOAuthReqDto(
-            String account, String password, String email, String name, LocalDate birthDate,
+            String loginId, String password, String email, String name, LocalDate birthDate,
             Gender gender, String nickname, UserRole userRole, Provider provider, String providerAccountId
     ) {
-        this.account = account;
+        this.loginId = loginId;
         this.password = password;
         this.email = email;
         this.name = name;
@@ -45,7 +45,7 @@ public class SignUpWithOAuthReqDto {
 
     public static SignUpWithOAuthReqDto from(SignUpWithOAuthReqVo signUpWithOAuthReqVo) {
         return SignUpWithOAuthReqDto.builder()
-                .account(signUpWithOAuthReqVo.getAccount())
+                .loginId(signUpWithOAuthReqVo.getLoginId())
                 .password(signUpWithOAuthReqVo.getPassword())
                 .email(signUpWithOAuthReqVo.getEmail())
                 .name(signUpWithOAuthReqVo.getName())

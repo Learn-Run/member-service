@@ -1,12 +1,12 @@
 package com.unionclass.memberservice.auth.presentation;
 
 import com.unionclass.memberservice.auth.application.AuthService;
-import com.unionclass.memberservice.auth.dto.in.AccountReqDto;
-import com.unionclass.memberservice.auth.dto.in.NicknameReqDto;
+import com.unionclass.memberservice.auth.dto.in.GetLoginIdReqDto;
+import com.unionclass.memberservice.auth.dto.in.GetNicknameReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignUpReqDto;
-import com.unionclass.memberservice.auth.vo.in.AccountReqVo;
-import com.unionclass.memberservice.auth.vo.in.NicknameReqVo;
+import com.unionclass.memberservice.auth.vo.in.GetLoginIdReqVo;
+import com.unionclass.memberservice.auth.vo.in.GetNicknameReqVo;
 import com.unionclass.memberservice.auth.vo.in.SignInReqVo;
 import com.unionclass.memberservice.auth.vo.in.SignUpReqVo;
 import com.unionclass.memberservice.auth.vo.out.SignInResVo;
@@ -49,7 +49,7 @@ public class AuthController {
             description = """
     회원가입을 위한 요청 정보입니다.
 
-    - account: 4~20자, 공백 불가
+    - loginId: 4~20자, 공백 불가
     - password: 8~20자, 대문자/소문자/숫자/특수문자 포함 필수
     - email: 유효한 이메일 형식
     - name: 이름
@@ -80,7 +80,7 @@ public class AuthController {
     인증에 성공하면 JWT 토큰을 반환합니다.
 
     [요청 조건]
-    - account : 4~20자 (필수 입력)
+    - loginId : 4~20자 (필수 입력)
     - password : 최소 8자 이상, 대/소문자 + 숫자 + 특수문자 포함 필수 (필수 입력)
 
     [인증 실패]
@@ -124,32 +124,32 @@ public class AuthController {
     /**
      * 4. 아이디 중복 검사
      *
-     * @param accountReqVo
+     * @param getLoginIdReqVo
      * @return
      */
     @Operation(
-            summary = "계정 중복 검사",
+            summary = "아이디 중복 검사",
             description = """
-    사용자가 입력한 계정(account)이 이미 가입된 계정인지 검사합니다.
+    사용자가 입력한 아이디(loginId)가 이미 가입된 아이디인지 검사합니다.
 
     [요청 조건]
-    - account: 필수 입력, 공백 불가
+    - loginId: 필수 입력, 공백 불가
 
     [처리 방식]
-    - 계정으로 회원을 조회하여 존재 여부를 확인합니다.
+    - 아이디로 회원을 조회하여 존재 여부를 확인합니다.
     - 이미 존재하는 경우 예외를 발생시킵니다.
     - 존재하지 않으면 중복되지 않은 것으로 간주하고 성공 응답을 반환합니다.
 
     [예외 코드]
-    - ACCOUNT_ALREADY_EXISTS: 중복된 계정일 경우
+    - LOGIN_ID_ALREADY_EXISTS: 중복된 아이디일 경우
     """
     )
-    @PostMapping("/account/check-duplicate")
-    public BaseResponseEntity<Void> checkAccountDuplicate(
-            @Valid @RequestBody AccountReqVo accountReqVo
+    @PostMapping("/login-id/check-duplicate")
+    public BaseResponseEntity<Void> checkLoginIdDuplicate(
+            @Valid @RequestBody GetLoginIdReqVo getLoginIdReqVo
     ) {
-        authService.checkAccountDuplicate(AccountReqDto.from(accountReqVo));
-        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHECK_ACCOUNT_DUPLICATE.getMessage());
+        authService.checkLoginIdDuplicate(GetLoginIdReqDto.from(getLoginIdReqVo));
+        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHECK_LOGIN_ID_DUPLICATE.getMessage());
     }
 
     /**
@@ -176,9 +176,9 @@ public class AuthController {
     )
     @PostMapping("/nickname/check-duplicate")
     public BaseResponseEntity<Void> checkNicknameDuplicate(
-            @Valid @RequestBody NicknameReqVo nicknameReqVo
+            @Valid @RequestBody GetNicknameReqVo nicknameReqVo
     ) {
-        authService.checkNicknameDuplicate(NicknameReqDto.from(nicknameReqVo));
+        authService.checkNicknameDuplicate(GetNicknameReqDto.from(nicknameReqVo));
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHECK_NICKNAME_DUPLICATE.getMessage());
     }
 }

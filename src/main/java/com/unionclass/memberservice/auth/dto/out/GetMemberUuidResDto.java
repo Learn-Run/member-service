@@ -7,17 +7,17 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class MemberUuidResDto {
+public class GetMemberUuidResDto {
 
     private String memberUuid;
 
     @Builder
-    public MemberUuidResDto(String memberUuid) {
+    public GetMemberUuidResDto(String memberUuid) {
         this.memberUuid = memberUuid;
     }
 
-    public static MemberUuidResDto from(Member member) {
-        return MemberUuidResDto.builder()
+    public static GetMemberUuidResDto from(Member member) {
+        return GetMemberUuidResDto.builder()
                 .memberUuid(member.getMemberUuid())
                 .build();
     }
