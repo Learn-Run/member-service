@@ -15,6 +15,7 @@ public class Agreement extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long uuid;
     private String name;
 
     @Lob
@@ -25,8 +26,12 @@ public class Agreement extends BaseEntity {
     private Boolean deletedAt;
 
     @Builder
-    public Agreement(Long id, String name, String content, Boolean required, Boolean deleted, Boolean deletedAt) {
+    public Agreement(
+            Long id, Long uuid, String name, String content, Boolean required,
+            Boolean deleted, Boolean deletedAt
+    ) {
         this.id = id;
+        this.uuid = uuid;
         this.name = name;
         this.content = content;
         this.required = required;

@@ -4,6 +4,7 @@ import com.unionclass.memberservice.agreement.dto.in.CreateAgreementReqDto;
 import com.unionclass.memberservice.agreement.infrastructure.AgreementRepository;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
+import com.unionclass.memberservice.common.util.NumericUuidGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class AgreementServiceImpl implements AgreementService {
 
     private final AgreementRepository agreementRepository;
+    private final NumericUuidGenerator numericUuidGenerator;
 
     @Transactional
     @Override
     public void createAgreement(CreateAgreementReqDto createAgreementReqDto) {
         try {
-            agreementRepository.save(createAgreementReqDto.toEntity());
+            agreementRepository.save(createAgreementReqDto.toEntity(numericUuidGenerator.generate()));
             log.info("약관동의 항목 생성 완료 : name = {}, 필수여부 = {}",
                     createAgreementReqDto.getAgreementName(),
                     createAgreementReqDto.getRequired());

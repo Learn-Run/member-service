@@ -48,6 +48,4 @@ public class AgreementController {
         agreementService.createAgreement(CreateAgreementReqDto.from(createAgreementReqVo));
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CREATE_AGREEMENT.getMessage());
     }
-
-
 }

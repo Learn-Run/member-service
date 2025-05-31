@@ -2,7 +2,6 @@ package com.unionclass.memberservice.agreement.dto.in;
 
 import com.unionclass.memberservice.agreement.entity.Agreement;
 import com.unionclass.memberservice.agreement.vo.in.CreateAgreementReqVo;
-import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,8 +29,10 @@ public class CreateAgreementReqDto {
                 .build();
     }
 
-    public Agreement toEntity() {
+
+    public Agreement toEntity(Long agreementUuid) {
         return Agreement.builder()
+                .uuid(agreementUuid)
                 .name(agreementName)
                 .content(agreementContent)
                 .required(required)
