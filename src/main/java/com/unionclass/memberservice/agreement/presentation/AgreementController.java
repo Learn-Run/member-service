@@ -25,6 +25,8 @@ public class AgreementController {
     @Operation(
             summary = "약관동의 생성",
             description = """
+    ⚠️ 본 API 는 운영 사용자에게 노출되지 않으며, 개발 환경 또는 테스트 목적에 한해 사용됩니다.
+    
     새로운 약관 항목을 생성합니다.
 
     [요청 조건]
@@ -46,4 +48,6 @@ public class AgreementController {
         agreementService.createAgreement(CreateAgreementReqDto.from(createAgreementReqVo));
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CREATE_AGREEMENT.getMessage());
     }
+
+
 }
