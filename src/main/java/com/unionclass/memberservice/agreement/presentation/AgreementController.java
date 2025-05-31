@@ -2,8 +2,10 @@ package com.unionclass.memberservice.agreement.presentation;
 
 import com.unionclass.memberservice.agreement.application.AgreementService;
 import com.unionclass.memberservice.agreement.dto.in.CreateAgreementReqDto;
+import com.unionclass.memberservice.agreement.dto.in.UpdateAgreementReqDto;
 import com.unionclass.memberservice.agreement.dto.out.GetValidAgreementUuidResDto;
 import com.unionclass.memberservice.agreement.vo.in.CreateAgreementReqVo;
+import com.unionclass.memberservice.agreement.vo.in.UpdateAgreementReqVo;
 import com.unionclass.memberservice.agreement.vo.out.GetAgreementResVo;
 import com.unionclass.memberservice.agreement.vo.out.GetValidAgreementUuidResVo;
 import com.unionclass.memberservice.common.response.BaseResponseEntity;
@@ -41,7 +43,7 @@ public class AgreementController {
     @Operation(
             summary = "약관동의 항목 생성 (개발/테스트용)",
             description = """
-    ⚠️ 본 API 는 운영 사용자에게 노출되지 않으며, 개발 환경 또는 테스트 목적에 한해 사용됩니다.
+    ⚠️ 본 API 는 실제 사용자에게는 제공되지 않으며, 개발 환경 또는 테스트 목적에 한해 사용됩니다.
     
     새로운 약관 항목을 생성합니다.
 
@@ -85,7 +87,7 @@ public class AgreementController {
     [응답 데이터]
     - agreementName: 약관 명
     - agreementContent: 약관 본문
-    - required: 필수 여부 (필수: true / 선택: false)
+    - required: 필수 여부 (true: 필수 동의, false: 선택 동의)
 
     [예외 상황]
     - FAILED_TO_FIND_AGREEMENT: 존재하지 않는 UUID 를 조회한 경우 발생
@@ -130,5 +132,34 @@ public class AgreementController {
                 ResponseMessage.SUCCESS_GET_ALL_VALID_AGREEMENT_UUIDS.getMessage(),
                 agreementService.getAllValidAgreementUuids().stream().map(GetValidAgreementUuidResDto::toVo).toList()
         );
+    }
+
+    @Operation(
+            summary = "약관동의 항목 수정 (개발/테스트용)",
+            description = """
+    ⚠️ 본 API 는 실제 사용자에게는 제공되지 않으며, 개발 환경 또는 테스트 목적에 한해 사용됩니다.
+
+    지정된 약관 UUID 에 해당하는 약관 항목의 내용을 수정합니다.
+    요청 필드 중 null 로 전달된 항목은 기존 값을 유지합니다.
+
+    [요청 경로]
+    - PUT /api/v1/agreement/{agreementUuid}
+
+    [요청 필드]
+    - agreementName (선택): 수정할 약관 제목
+    - agreementContent (선택): 수정할 약관 본문
+    - required (선택): 필수 여부 (true: 필수 동의, false: 선택 동의)
+
+    [예외 상황]
+    - FAILED_TO_FIND_AGREEMENT: 존재하지 않는 UUID 를 조회한 경우 발생
+    """
+    )
+    @PutMapping("/{agreementUuid}")
+    public BaseResponseEntity<Void> updateAgreement(
+            @PathVariable Long agreementUuid,
+            @Valid @RequestBody UpdateAgreementReqVo updateAgreementReqVo
+    ) {
+        agreementService.updateAgreement(UpdateAgreementReqDto.of(agreementUuid, updateAgreementReqVo));
+        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_UPDATE_AGREEMENT.getMessage());
     }
 }

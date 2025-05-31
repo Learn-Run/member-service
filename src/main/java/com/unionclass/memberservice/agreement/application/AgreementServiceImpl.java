@@ -1,8 +1,10 @@
 package com.unionclass.memberservice.agreement.application;
 
 import com.unionclass.memberservice.agreement.dto.in.CreateAgreementReqDto;
+import com.unionclass.memberservice.agreement.dto.in.UpdateAgreementReqDto;
 import com.unionclass.memberservice.agreement.dto.out.GetAgreementResDto;
 import com.unionclass.memberservice.agreement.dto.out.GetValidAgreementUuidResDto;
+import com.unionclass.memberservice.agreement.entity.Agreement;
 import com.unionclass.memberservice.agreement.infrastructure.AgreementRepository;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
@@ -75,5 +77,24 @@ public class AgreementServiceImpl implements AgreementService {
                 .filter(agreement -> Boolean.FALSE.equals(agreement.getDeleted()))
                 .map(GetValidAgreementUuidResDto::from)
                 .toList();
+    }
+
+    @Transactional
+    @Override
+    public void updateAgreement(UpdateAgreementReqDto updateAgreementReqDto) {
+        Agreement agreement = agreementRepository.findByUuid(updateAgreementReqDto.getAgreementUuid())
+                .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_FIND_AGREEMENT));
+
+        agreementRepository.save(
+                Agreement.builder()
+                        .id(agreement.getId())
+                        .uuid(agreement.getUuid())
+                        .name(updateAgreementReqDto.getAgreementName() == null ? agreement.getName() : updateAgreementReqDto.getAgreementName())
+                        .content(updateAgreementReqDto.getAgreementContent() == null ? agreement.getContent() : updateAgreementReqDto.getAgreementContent())
+                        .required(updateAgreementReqDto.getRequired() == null ? agreement.getRequired() : updateAgreementReqDto.getRequired())
+                        .deleted(agreement.getDeleted())
+                        .deletedAt(agreement.getDeletedAt())
+                        .build()
+        );
     }
 }
