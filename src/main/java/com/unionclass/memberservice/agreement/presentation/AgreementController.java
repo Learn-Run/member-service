@@ -2,9 +2,10 @@ package com.unionclass.memberservice.agreement.presentation;
 
 import com.unionclass.memberservice.agreement.application.AgreementService;
 import com.unionclass.memberservice.agreement.dto.in.CreateAgreementReqDto;
-import com.unionclass.memberservice.agreement.dto.out.GetAgreementResDto;
+import com.unionclass.memberservice.agreement.dto.out.GetValidAgreementUuidResDto;
 import com.unionclass.memberservice.agreement.vo.in.CreateAgreementReqVo;
 import com.unionclass.memberservice.agreement.vo.out.GetAgreementResVo;
+import com.unionclass.memberservice.agreement.vo.out.GetValidAgreementUuidResVo;
 import com.unionclass.memberservice.common.response.BaseResponseEntity;
 import com.unionclass.memberservice.common.response.ResponseMessage;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -75,5 +78,32 @@ public class AgreementController {
         return new BaseResponseEntity<>(
                 ResponseMessage.SUCCESS_GET_AGREEMENT.getMessage(),
                 agreementService.getAgreement(agreementUuid).toVo());
+    }
+
+    @Operation(
+            summary = "유효한 약관동의 항목 UUID 전체 리스트 조회",
+            description = """
+    유효한 약관동의 항목들의 UUID 전체 리스트를 조회합니다.
+
+    [요청 경로]
+    - GET /api/v1/agreement/uuid/all
+
+    [응답 데이터]
+    - UUID (Long 타입) 만 리스트 형태로 응답됩니다.
+
+    [처리 로직]
+    - agreement 테이블에서 deleted = false 인 항목만 필터링
+    - 각 항목의 uuid 값만 추출 후 리스트로 반환
+
+    [예외 상황]
+    - 약관이 하나도 없는 경우 빈 리스트 반환
+    """
+    )
+    @GetMapping("/uuid/all")
+    public BaseResponseEntity<List<GetValidAgreementUuidResVo>> getAllValidAgreementUuids() {
+        return new BaseResponseEntity<>(
+                ResponseMessage.SUCCESS_GET_ALL_VALID_AGREEMENT_UUIDS.getMessage(),
+                agreementService.getAllValidAgreementUuids().stream().map(GetValidAgreementUuidResDto::toVo).toList()
+        );
     }
 }

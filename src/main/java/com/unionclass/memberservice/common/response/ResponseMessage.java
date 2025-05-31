@@ -19,7 +19,8 @@ public enum ResponseMessage {
     SUCCESS_SIGN_IN_WITH_OAUTH("소셜 로그인에 성공하였습니다."),
     SUCCESS_SIGN_UP_WITH_OAUTH("소셜 회원가입에 성공하였습니다."),
     SUCCESS_CREATE_AGREEMENT("약관동의 항목 생성에 성공하였습니다."),
-    SUCCESS_GET_AGREEMENT("약관동의 항목 단건 조회에 성공하였습니다.")
+    SUCCESS_GET_AGREEMENT("약관동의 항목 단건 조회에 성공하였습니다."),
+    SUCCESS_GET_ALL_VALID_AGREEMENT_UUIDS("유효한 약관동의 항목 UUID 전체 조회에 성공하였습니다.")
     ;
 
     private final String message;

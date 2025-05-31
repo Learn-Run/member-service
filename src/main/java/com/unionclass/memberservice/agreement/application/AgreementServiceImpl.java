@@ -2,6 +2,8 @@ package com.unionclass.memberservice.agreement.application;
 
 import com.unionclass.memberservice.agreement.dto.in.CreateAgreementReqDto;
 import com.unionclass.memberservice.agreement.dto.out.GetAgreementResDto;
+import com.unionclass.memberservice.agreement.dto.out.GetValidAgreementUuidResDto;
+import com.unionclass.memberservice.agreement.entity.Agreement;
 import com.unionclass.memberservice.agreement.infrastructure.AgreementRepository;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
@@ -10,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -40,5 +44,13 @@ public class AgreementServiceImpl implements AgreementService {
     public GetAgreementResDto getAgreement(Long agreementUuid) {
         return GetAgreementResDto.from(agreementRepository.findByUuid(agreementUuid)
                 .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_FIND_AGREEMENT)));
+    }
+
+    @Override
+    public List<GetValidAgreementUuidResDto> getAllValidAgreementUuids() {
+        return agreementRepository.findAll().stream()
+                .filter(agreement -> Boolean.FALSE.equals(agreement.getDeleted()))
+                .map(GetValidAgreementUuidResDto::from)
+                .toList();
     }
 }
