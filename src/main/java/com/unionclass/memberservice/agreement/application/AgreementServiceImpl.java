@@ -1,6 +1,7 @@
 package com.unionclass.memberservice.agreement.application;
 
 import com.unionclass.memberservice.agreement.dto.in.CreateAgreementReqDto;
+import com.unionclass.memberservice.agreement.dto.out.GetAgreementResDto;
 import com.unionclass.memberservice.agreement.infrastructure.AgreementRepository;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
@@ -33,5 +34,11 @@ public class AgreementServiceImpl implements AgreementService {
                     createAgreementReqDto.getRequired());
             throw new BaseException(ErrorCode.FAILED_TO_CREATE_AGREEMENT);
         }
+    }
+
+    @Override
+    public GetAgreementResDto getAgreement(Long agreementUuid) {
+        return GetAgreementResDto.from(agreementRepository.findByUuid(agreementUuid)
+                .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_FIND_AGREEMENT)));
     }
 }
