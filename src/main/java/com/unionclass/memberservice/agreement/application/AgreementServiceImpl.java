@@ -3,7 +3,6 @@ package com.unionclass.memberservice.agreement.application;
 import com.unionclass.memberservice.agreement.dto.in.CreateAgreementReqDto;
 import com.unionclass.memberservice.agreement.dto.out.GetAgreementResDto;
 import com.unionclass.memberservice.agreement.dto.out.GetValidAgreementUuidResDto;
-import com.unionclass.memberservice.agreement.entity.Agreement;
 import com.unionclass.memberservice.agreement.infrastructure.AgreementRepository;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
@@ -24,6 +23,19 @@ public class AgreementServiceImpl implements AgreementService {
     private final AgreementRepository agreementRepository;
     private final NumericUuidGenerator numericUuidGenerator;
 
+    /**
+     * /api/v1/agreement
+     *
+     * 1. 약관동의 항목 생성
+     * 2. 약관동의 항목 단건 조회
+     * 3. 유효한 약관동의 항목 UUID 전체 리스트 조회
+     */
+
+    /**
+     * 1. 약관동의 항목 생성
+     *
+     * @param createAgreementReqDto
+     */
     @Transactional
     @Override
     public void createAgreement(CreateAgreementReqDto createAgreementReqDto) {
@@ -40,12 +52,23 @@ public class AgreementServiceImpl implements AgreementService {
         }
     }
 
+    /**
+     * 2. 약관동의 항목 단건 조회
+     *
+     * @param agreementUuid
+     * @return
+     */
     @Override
     public GetAgreementResDto getAgreement(Long agreementUuid) {
         return GetAgreementResDto.from(agreementRepository.findByUuid(agreementUuid)
                 .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_FIND_AGREEMENT)));
     }
 
+    /**
+     * 3. 유효한 약관동의 항목 UUID 전체 리스트 조회
+     *
+     * @return
+     */
     @Override
     public List<GetValidAgreementUuidResDto> getAllValidAgreementUuids() {
         return agreementRepository.findAll().stream()
