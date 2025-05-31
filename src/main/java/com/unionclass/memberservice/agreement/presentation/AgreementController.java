@@ -23,7 +23,7 @@ public class AgreementController {
     private final AgreementService agreementService;
 
     @Operation(
-            summary = "약관동의 생성",
+            summary = "약관동의 생성 (개발/테스트용)",
             description = """
     ⚠️ 본 API 는 운영 사용자에게 노출되지 않으며, 개발 환경 또는 테스트 목적에 한해 사용됩니다.
     
