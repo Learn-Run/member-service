@@ -96,11 +96,11 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public void checkLoginIdDuplicate(GetLoginIdReqDto getLoginIdReqDto) {
-        if (memberRepository.findByLoginId(getLoginIdReqDto.getAccount()).isPresent()) {
-            log.warn("아이디 중복됨 - 입력 아이디: {}", getLoginIdReqDto.getAccount());
+        if (memberRepository.findByLoginId(getLoginIdReqDto.getLoginId()).isPresent()) {
+            log.warn("아이디 중복됨 - 입력 아이디: {}", getLoginIdReqDto.getLoginId());
             throw new BaseException(ErrorCode.LOGIN_ID_ALREADY_EXISTS);
         }
-        log.info("아이디 중복 없음 - 입력 아이디: {}", getLoginIdReqDto.getAccount());
+        log.info("아이디 중복 없음 - 입력 아이디: {}", getLoginIdReqDto.getLoginId());
     }
 
     /**
