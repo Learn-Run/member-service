@@ -5,6 +5,7 @@ import com.unionclass.memberservice.common.exception.ErrorCode;
 import com.unionclass.memberservice.member.dto.in.ChangeNicknameReqDto;
 import com.unionclass.memberservice.member.dto.in.ChangePasswordReqDto;
 import com.unionclass.memberservice.member.dto.in.ResetPasswordReqDto;
+import com.unionclass.memberservice.member.dto.out.GetMyInfoResDto;
 import com.unionclass.memberservice.member.entity.Member;
 import com.unionclass.memberservice.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class MemberServiceImpl implements MemberService {
      * 1. 비밀번호 변경
      * 2. 임시 비밀번호 설정
      * 3. 닉네임 변경
+     * 4. 내 정보 조회
      */
 
     /**
@@ -124,5 +126,17 @@ public class MemberServiceImpl implements MemberService {
         log.info("닉네임 변경 완료 - Member UUID: {}, 새로운 닉네임: {}",
                 changeNicknameReqDto.getMemberUuid(),
                 member.getNickname());
+    }
+
+    /**
+     * 4. 내 정보 조회
+     *
+     * @param memberUuid
+     * @return
+     */
+    @Override
+    public GetMyInfoResDto getMyInfo(String memberUuid) {
+        return GetMyInfoResDto.from(memberRepository.findByMemberUuid(memberUuid)
+                .orElseThrow(() -> new BaseException(ErrorCode.NO_EXIST_MEMBER)));
     }
 }

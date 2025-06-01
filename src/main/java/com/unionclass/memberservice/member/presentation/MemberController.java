@@ -7,6 +7,7 @@ import com.unionclass.memberservice.member.dto.in.ChangeNicknameReqDto;
 import com.unionclass.memberservice.member.dto.in.ChangePasswordReqDto;
 import com.unionclass.memberservice.member.vo.in.ChangeNicknameReqVo;
 import com.unionclass.memberservice.member.vo.in.ChangePasswordReqVo;
+import com.unionclass.memberservice.member.vo.out.GetMyInfoResVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -26,6 +27,7 @@ public class MemberController {
      *
      * 1. 비밀번호 변경
      * 2. 닉네임 변경
+     * 3. 내 정보 조회
      */
 
     /**
@@ -74,21 +76,23 @@ public class MemberController {
     @Operation(
             summary = "닉네임 변경",
             description = """
-    사용자의 닉네임을 변경합니다.
-
+    로그인한 회원 본인의 정보를 조회합니다.
+    
     [요청 헤더]
     - X-Member-UUID : (String) 필수 입력, 회원 고유 식별자
     
-    [요청 바디]
-    - nickname : (String) 필수 입력, 변경할 닉네임
+    [응답 필드]
+    - email : (String) 이메일 주소
+    - nickname : (String) 닉네임
+    - gender : (String) 성별 (남성 또는 여성)
+    - birthDate : (LocalDate) 생년월일
     
     [처리 로직]
-    - memberUuid 를 통해 회원 정보를 조회
-    - 조회 실패 시 예외 발생
-    - 닉네임을 변경한 후 회원 정보를 저장
+    - memberUuid 를 기준으로 회원 정보를 조회
+    - 존재하지 않는 회원일 경우 예외 발생
     
     [예외 상황]
-    - NO_EXIST_MEMBER: 존재하지 않는 회원 UUID 로 요청한 경우
+    - NO_EXIST_MEMBER: 해당 UUID 로 조회된 회원이 없는 경우
     """
     )
     @PutMapping("/change-nickname")
@@ -98,5 +102,24 @@ public class MemberController {
     ) {
         memberService.changeNickname(ChangeNicknameReqDto.of(memberUuid, changeNicknameReqVo));
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHANGE_NICKNAME.getMessage());
+    }
+
+    /**
+     * 3. 내 정보 조회
+     *
+     * @param memberUuid
+     * @return
+     */
+    @Operation(
+            summary = "내 정보 조회",
+            description = ""
+    )
+    @GetMapping("/my-info")
+    public BaseResponseEntity<GetMyInfoResVo> getMyInfo(
+            @RequestHeader("X-Member-UUID") String memberUuid
+    ) {
+        return new BaseResponseEntity<>(
+                ResponseMessage.SUCCESS_GET_MY_INFO.getMessage(),
+                memberService.getMyInfo(memberUuid).toVo());
     }
 }
