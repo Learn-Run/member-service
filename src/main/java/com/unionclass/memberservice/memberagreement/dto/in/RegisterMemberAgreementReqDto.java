@@ -2,7 +2,6 @@ package com.unionclass.memberservice.memberagreement.dto.in;
 
 import com.unionclass.memberservice.memberagreement.entity.MemberAgreement;
 import com.unionclass.memberservice.memberagreement.vo.in.RegisterMemberAgreementReqVo;
-import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +21,7 @@ public class RegisterMemberAgreementReqDto {
         this.agreementStatus = agreementStatus;
     }
 
-    public static RegisterMemberAgreementReqDto from(
+    public static RegisterMemberAgreementReqDto of(
             String memberUuid,
             RegisterMemberAgreementReqVo registerMemberAgreementReqVo
     ) {
