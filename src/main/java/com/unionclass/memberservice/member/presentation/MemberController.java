@@ -3,7 +3,9 @@ package com.unionclass.memberservice.member.presentation;
 import com.unionclass.memberservice.common.response.BaseResponseEntity;
 import com.unionclass.memberservice.common.response.ResponseMessage;
 import com.unionclass.memberservice.member.application.MemberService;
+import com.unionclass.memberservice.member.dto.in.ChangeNicknameReqDto;
 import com.unionclass.memberservice.member.dto.in.ChangePasswordReqDto;
+import com.unionclass.memberservice.member.vo.in.ChangeNicknameReqVo;
 import com.unionclass.memberservice.member.vo.in.ChangePasswordReqVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +25,7 @@ public class MemberController {
      * /api/v1/member
      *
      * 1. 비밀번호 변경
+     * 2. 닉네임 변경
      */
 
     /**
@@ -59,5 +62,41 @@ public class MemberController {
     ) {
         memberService.changePassword(ChangePasswordReqDto.of(memberUuid, passwordReqVo));
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHANGE_PASSWORD.getMessage());
+    }
+
+    /**
+     * 2. 닉네임 변경
+     *
+     * @param memberUuid
+     * @param changeNicknameReqVo
+     * @return
+     */
+    @Operation(
+            summary = "닉네임 변경",
+            description = """
+    사용자의 닉네임을 변경합니다.
+
+    [요청 헤더]
+    - X-Member-UUID : (String) 필수 입력, 회원 고유 식별자
+    
+    [요청 바디]
+    - nickname : (String) 필수 입력, 변경할 닉네임
+    
+    [처리 로직]
+    - memberUuid 를 통해 회원 정보를 조회
+    - 조회 실패 시 예외 발생
+    - 닉네임을 변경한 후 회원 정보를 저장
+    
+    [예외 상황]
+    - NO_EXIST_MEMBER: 존재하지 않는 회원 UUID 로 요청한 경우
+    """
+    )
+    @PutMapping("/change-nickname")
+    public BaseResponseEntity<Void> changeNickname(
+            @RequestHeader("X-Member-UUID") String memberUuid,
+            @Valid @RequestBody ChangeNicknameReqVo changeNicknameReqVo
+    ) {
+        memberService.changeNickname(ChangeNicknameReqDto.of(memberUuid, changeNicknameReqVo));
+        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHANGE_NICKNAME.getMessage());
     }
 }

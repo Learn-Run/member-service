@@ -24,7 +24,8 @@ public enum ResponseMessage {
     SUCCESS_UPDATE_AGREEMENT("약관동의 항목 수정에 성공하였습니다."),
     SUCCESS_DELETE_AGREEMENT("약관동의 항목 삭제에 성공하였습니다."),
     SUCCESS_REGISTER_MEMBER_AGREEMENT("회원 약관동의 여부 등록에 성공하였습니다."),
-    SUCCESS_UPDATE_MEMBER_AGREEMENT("회원 약관동의 여부 변경에 성공하였습니다.")
+    SUCCESS_UPDATE_MEMBER_AGREEMENT("회원 약관동의 여부 변경에 성공하였습니다."),
+    SUCCESS_CHANGE_NICKNAME("닉네임 변경에 성공하였습니다.")
     ;
 
     private final String message;
