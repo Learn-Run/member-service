@@ -41,7 +41,8 @@ public enum ErrorCode {
     OAUTH_ACCOUNT_ALREADY_BOUND(HttpStatus.CONFLICT, false, 1116, "해당 OAuth 계정은 이미 연동되어 있습니다."),
     OAUTH_PROVIDER_ALREADY_BOUND(HttpStatus.CONFLICT, false, 1117, "해당 회원은 이미 해당 OAuth Provider 와 연동되어 있습니다."),
     FAILED_TO_CREATE_AGREEMENT(HttpStatus.INTERNAL_SERVER_ERROR, false, 1118, "약관동의 항목 생성에 실패하였습니다."),
-    FAILED_TO_FIND_AGREEMENT(HttpStatus.BAD_REQUEST, false, 1119, "약관동의 항목 조회에 실패하였습니다.")
+    FAILED_TO_FIND_AGREEMENT(HttpStatus.BAD_REQUEST, false, 1119, "약관동의 항목 조회에 실패하였습니다."),
+    MUST_AGREE_REQUIRED_AGREEMENT(HttpStatus.BAD_REQUEST, false, 1120, "필수 동의 항목에는 반드시 동의해야 합니다.")
     ;
 
     /**

@@ -2,6 +2,7 @@ package com.unionclass.memberservice.agreement.application;
 
 import com.unionclass.memberservice.agreement.dto.in.CreateAgreementReqDto;
 import com.unionclass.memberservice.agreement.dto.in.UpdateAgreementReqDto;
+import com.unionclass.memberservice.agreement.dto.out.GetAgreementRequiredResDto;
 import com.unionclass.memberservice.agreement.dto.out.GetAgreementResDto;
 import com.unionclass.memberservice.agreement.dto.out.GetValidAgreementUuidResDto;
 import com.unionclass.memberservice.agreement.entity.Agreement;
@@ -14,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Slf4j
@@ -31,6 +34,8 @@ public class AgreementServiceImpl implements AgreementService {
      * 1. 약관동의 항목 생성
      * 2. 약관동의 항목 단건 조회
      * 3. 유효한 약관동의 항목 UUID 전체 리스트 조회
+     * 4. 약관동의 항목 수정
+     * 5. 약관동의 항목 삭제 (소프트 딜리트)
      */
 
     /**
@@ -79,6 +84,11 @@ public class AgreementServiceImpl implements AgreementService {
                 .toList();
     }
 
+    /**
+     * 4. 약관동의 항목 수정
+     *
+     * @param updateAgreementReqDto
+     */
     @Transactional
     @Override
     public void updateAgreement(UpdateAgreementReqDto updateAgreementReqDto) {
@@ -96,5 +106,35 @@ public class AgreementServiceImpl implements AgreementService {
                         .deletedAt(agreement.getDeletedAt())
                         .build()
         );
+    }
+
+    /**
+     * 5. 약관동의 항목 삭제 (소프트 딜리트)
+     *
+     * @param agreementUuid
+     */
+    @Transactional
+    @Override
+    public void deleteAgreement(Long agreementUuid) {
+        Agreement agreement = agreementRepository.findByUuid(agreementUuid)
+                .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_FIND_AGREEMENT));
+
+        agreementRepository.save(
+                Agreement.builder()
+                        .id(agreement.getId())
+                        .uuid(agreement.getUuid())
+                        .name(agreement.getName())
+                        .content(agreement.getContent())
+                        .required(agreement.getRequired())
+                        .deleted(true)
+                        .deletedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
+                        .build()
+        );
+    }
+
+    @Override
+    public GetAgreementRequiredResDto getAgreementRequired(Long agreementUuid) {
+        return GetAgreementRequiredResDto.from(agreementRepository.findByUuid(agreementUuid)
+                .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_FIND_AGREEMENT)));
     }
 }

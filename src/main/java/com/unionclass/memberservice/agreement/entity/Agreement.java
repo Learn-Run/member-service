@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -23,12 +25,12 @@ public class Agreement extends BaseEntity {
     private Boolean required;
 
     private Boolean deleted;
-    private Boolean deletedAt;
+    private LocalDateTime deletedAt;
 
     @Builder
     public Agreement(
             Long id, Long uuid, String name, String content, Boolean required,
-            Boolean deleted, Boolean deletedAt
+            Boolean deleted, LocalDateTime deletedAt
     ) {
         this.id = id;
         this.uuid = uuid;
