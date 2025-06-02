@@ -38,23 +38,23 @@ public class MemberAgreementController {
     @Operation(
             summary = "회원 약관동의 여부 등록",
             description = """
-    회원이 특정 약관 항목에 대해 동의 또는 비동의 여부를 등록합니다.
+                    회원이 특정 약관 항목에 대해 동의 또는 비동의 여부를 등록합니다.
     
-    [요청 헤더]
-    - X-Member-UUID : (String) 필수 입력, 회원 식별자
-    
-    [요청 바디]
-    - agreementUuid : (Long)  필수 입력, 약관 항목의 고유 식별자
-    - agreementStatus : (Boolean) 필수 입력, 동의 여부 (true: 동의, false: 비동의)
-    
-    [처리 로직]
-    - 필수 항목인데 agreementStatus 가 false 인 경우 예외 처리
-    - 유효한 경우 동의 내역 저장
-    
-    [예외 상황]
-    - MUST_AGREE_REQUIRED_AGREEMENT: 필수 약관 항목에 동의하지 않은 경우
-    - FAILED_TO_FIND_AGREEMENT: 존재하지 않는 agreementUuid 로 요청한 경우
-    """
+                    [요청 헤더]
+                    - X-Member-UUID : (String) 필수 입력, 회원 식별자
+                    
+                    [요청 바디]
+                    - agreementUuid : (Long)  필수 입력, 약관 항목의 고유 식별자
+                    - agreementStatus : (Boolean) 필수 입력, 동의 여부 (true: 동의, false: 비동의)
+                    
+                    [처리 로직]
+                    - 필수 항목인데 agreementStatus 가 false 인 경우 예외 처리
+                    - 유효한 경우 동의 내역 저장
+                    
+                    [예외 상황]
+                    - MUST_AGREE_REQUIRED_AGREEMENT: 필수 약관 항목에 동의하지 않은 경우
+                    - FAILED_TO_FIND_AGREEMENT: 존재하지 않는 agreementUuid 로 요청한 경우
+                    """
     )
     @PostMapping
     public BaseResponseEntity<Void> registerMemberAgreement(
@@ -77,24 +77,24 @@ public class MemberAgreementController {
     @Operation(
             summary = "회원 약관동의 여부 변경",
             description = """
-    회원이 이미 등록한 약관 항목의 동의 여부를 변경합니다.
+                    회원이 이미 등록한 약관 항목의 동의 여부를 변경합니다.
     
-    [요청 헤더]
-    - X-Member-UUID : (String) 필수 입력, 회원 식별자
-    
-    [요청 바디]
-    - agreementUuid : (Long) 필수 입력, 변경 대상 약관 항목의 고유 식별자
-    - agreementStatus : (Boolean) 필수 입력, 수정할 동의 여부 (true: 동의, false: 비동의)
-    
-    [처리 로직]
-    - UUID 기반으로 회원의 기존 약관 동의 정보를 조회
-    - 필수 약관 항목일 경우 false 로 변경 요청 시 예외 처리
-    - 유효한 경우 동의 여부를 갱신하여 저장
-    
-    [예외 상황]
-    - FAILED_TO_FIND_MEMBER_AGREEMENT: 회원의 기존 약관 동의 정보가 존재하지 않는 경우
-    - CANNOT_UPDATE_REQUIRED_AGREEMENT: 필수 약관 항목은 동의 상태를 변경할 수 없음
-    """
+                    [요청 헤더]
+                    - X-Member-UUID : (String) 필수 입력, 회원 식별자
+                    
+                    [요청 바디]
+                    - agreementUuid : (Long) 필수 입력, 변경 대상 약관 항목의 고유 식별자
+                    - agreementStatus : (Boolean) 필수 입력, 수정할 동의 여부 (true: 동의, false: 비동의)
+                    
+                    [처리 로직]
+                    - UUID 기반으로 회원의 기존 약관 동의 정보를 조회
+                    - 필수 약관 항목일 경우 false 로 변경 요청 시 예외 처리
+                    - 유효한 경우 동의 여부를 갱신하여 저장
+                    
+                    [예외 상황]
+                    - FAILED_TO_FIND_MEMBER_AGREEMENT: 회원의 기존 약관 동의 정보가 존재하지 않는 경우
+                    - CANNOT_UPDATE_REQUIRED_AGREEMENT: 필수 약관 항목은 동의 상태를 변경할 수 없음
+                    """
     )
     @PutMapping
     public BaseResponseEntity<Void> updateMemberAgreement(

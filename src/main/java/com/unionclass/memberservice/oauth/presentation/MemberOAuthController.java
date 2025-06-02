@@ -38,21 +38,21 @@ public class MemberOAuthController {
     @Operation(
             summary = "소셜 로그인",
             description = """
-    소셜 계정(provider, providerAccountId)으로 로그인 요청을 처리합니다.
+                    소셜 계정(provider, providerAccountId)으로 로그인 요청을 처리합니다.
     
-    [요청 조건]
-    - provider: 필수 입력, 소셜 제공자 (예: KAKAO)
-    - providerAccountId: 필수 입력, 소셜 제공자 내부 고유 식별자
-    
-    [처리 로직]
-    - provider + providerAccountId 로 연동된 회원(OAuth 정보) 조회
-    - 연동 정보가 존재하면 해당 회원의 UUID 로 회원 인증 처리
-    - JWT accessToken 과 생성
-    - JWT accessToken 과 Member UUID 반환
-    
-    [예외 상황]
-    - NO_EXIST_OAUTH_MEMBER: 연동된 OAuth 계정 정보가 없을 경우 (→ 회원가입 유도 필요)
-    """
+                    [요청 조건]
+                    - provider: 필수 입력, 소셜 제공자 (예: KAKAO)
+                    - providerAccountId: 필수 입력, 소셜 제공자 내부 고유 식별자
+                    
+                    [처리 로직]
+                    - provider + providerAccountId 로 연동된 회원(OAuth 정보) 조회
+                    - 연동 정보가 존재하면 해당 회원의 UUID 로 회원 인증 처리
+                    - JWT accessToken 과 생성
+                    - JWT accessToken 과 Member UUID 반환
+                    
+                    [예외 상황]
+                    - NO_EXIST_OAUTH_MEMBER: 연동된 OAuth 계정 정보가 없을 경우 (→ 회원가입 유도 필요)
+                    """
     )
     @PostMapping("/sign-in")
     public BaseResponseEntity<SignInResVo> signInWithOAuth(
@@ -71,7 +71,25 @@ public class MemberOAuthController {
      * @return
      */
     @Operation(
-            summary = "소셜 회원가입"
+            summary = "소셜 회원가입",
+            description = """
+                    소셜 로그인(OAuth) 정보를 바탕으로 신규 회원을 등록합니다.
+                
+                    [요청 조건]
+                    - provider: (필수) 소셜 플랫폼 종류 (KAKAO)
+                    - providerAccountId: (필수) 소셜 플랫폼의 사용자 식별자
+                    - loginId, password, name, nickname, email 등 기본 회원 정보 포함
+                
+                    [처리 로직]
+                    1. provider + providerAccountId 조합으로 기존 가입 여부 확인
+                    2. 기존 가입되어 있으면 예외 발생 (OAUTH_ACCOUNT_ALREADY_BOUND)
+                    3. 내부 회원가입 로직 호출 (authService)
+                    4. memberUuid 를 기준으로 OAuth 정보 저장
+                
+                    [예외 상황]
+                    - OAUTH_ACCOUNT_ALREADY_BOUND: 이미 소셜 계정이 연동된 경우
+                    - 기타 회원가입 중 발생할 수 있는 예외는 공통 예외 처리 참조
+                    """
     )
     @PostMapping("/sign-up")
     public BaseResponseEntity<Void> signUpWithOAuth(
