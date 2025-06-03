@@ -1,4 +1,4 @@
-package com.unionclass.memberservice.common.redis;
+package com.unionclass.memberservice.common.redis.redisUtils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
-public class RedisUtils {
+public class RedisUtilsImpl implements RedisUtils {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -28,6 +28,7 @@ public class RedisUtils {
      * @param ttlSeconds
      * @param timeUnit
      */
+    @Override
     public void setValueWithTTL(String key, Object value, long ttlSeconds, TimeUnit timeUnit) {
         redisTemplate.opsForValue().set(key, value, ttlSeconds, timeUnit);
     }
@@ -37,6 +38,7 @@ public class RedisUtils {
      * @param key
      * @return
      */
+    @Override
     public Object getValue(String key) {
         return redisTemplate.opsForValue().get(key);
     }
@@ -45,6 +47,7 @@ public class RedisUtils {
      * 3. 해당 키 삭제
      * @param key
      */
+    @Override
     public void delete(String key) {
         redisTemplate.delete(key);
     }
@@ -54,6 +57,7 @@ public class RedisUtils {
      * @param key
      * @return
      */
+    @Override
     public boolean hasKey(String key) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }

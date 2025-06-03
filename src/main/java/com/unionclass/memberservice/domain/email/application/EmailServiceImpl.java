@@ -2,17 +2,18 @@ package com.unionclass.memberservice.domain.email.application;
 
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
+import com.unionclass.memberservice.common.redis.redisUtils.RedisUtils;
 import com.unionclass.memberservice.domain.email.dto.in.EmailCodeReqDto;
+import com.unionclass.memberservice.domain.email.dto.in.EmailReqDto;
 import com.unionclass.memberservice.domain.email.enums.EmailTitle;
 import com.unionclass.memberservice.domain.email.util.EmailTemplateProvider;
-import com.unionclass.memberservice.common.redis.RedisUtils;
-import com.unionclass.memberservice.domain.email.dto.in.EmailReqDto;
 import com.unionclass.memberservice.domain.email.util.EmailUtils;
 import com.unionclass.memberservice.domain.member.application.MemberService;
 import com.unionclass.memberservice.domain.member.dto.in.ResetPasswordReqDto;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RedissonClient;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,7 @@ public class EmailServiceImpl implements EmailService {
     private final EmailTemplateProvider emailTemplateProvider;
     private final JavaMailSender mailSender;
     private final MemberService memberService;
+    private final RedissonClient redissonClient;
 
     private static final String EMAIL_VERIFY_KEY_PREFIX = "verify:email:";
     private static final long EMAIL_CODE_TTL = 5L;
