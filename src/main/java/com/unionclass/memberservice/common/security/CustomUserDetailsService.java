@@ -2,7 +2,7 @@ package com.unionclass.memberservice.common.security;
 
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
-import com.unionclass.memberservice.member.infrastructure.MemberRepository;
+import com.unionclass.memberservice.domain.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
