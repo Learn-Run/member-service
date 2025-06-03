@@ -40,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
      * 2. 로그인
      * 3. 이메일 중복 검사
      * 4. 아이디 중복 검사
+     * 5. 회원가입 & MemberUuid 반환
      */
 
     /**
@@ -112,6 +113,12 @@ public class AuthServiceImpl implements AuthService {
         log.info("아이디 중복 없음 - 입력 아이디: {}", getLoginIdReqDto.getLoginId());
     }
 
+    /**
+     * 5. 회원가입 & MemberUuid 반환
+     *
+     * @param signUpReqDto
+     * @return
+     */
     @Transactional
     @Override
     public GetMemberUuidResDto signUpAndReturnMemberUuid(SignUpReqDto signUpReqDto) {
