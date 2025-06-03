@@ -149,16 +149,16 @@ public class AgreementController {
             description = """
                    ⚠️ 본 API 는 실제 사용자에게는 제공되지 않으며, 개발 환경 또는 테스트 목적에 한해 사용됩니다.
 
-                    지정된 약관동의 UUID 에 해당하는 약관동의 항목의 내용을 수정합니다.
-                    요청 필드 중 null 로 전달된 항목은 기존 값을 유지합니다.
+                   지정된 약관동의 UUID 에 해당하는 약관동의 항목의 내용을 수정합니다.
+                   요청 필드 중 null 로 전달된 항목은 기존 값을 유지합니다.
                 
-                    [요청 경로]
-                    - PUT /api/v1/agreement/{agreementUuid}
+                   [요청 경로]
+                   - PUT /api/v1/agreement/{agreementUuid}
                 
-                    [요청 필드]
-                    - agreementName (선택): 수정할 약관동의 항목 제목
-                    - agreementContent (선택): 수정할 약관동의 항목 본문
-                    - required (선택): 필수 여부 (true: 필수 동의, false: 선택 동의)
+                   [요청 필드]
+                   - agreementName (선택): 수정할 약관동의 항목 제목
+                   - agreementContent (선택): 수정할 약관동의 항목 본문
+                   - required (선택): 필수 여부 (true: 필수 동의, false: 선택 동의)
                 
                     [예외 상황]
                     - FAILED_TO_FIND_AGREEMENT: 존재하지 않는 UUID 를 조회한 경우 발생
