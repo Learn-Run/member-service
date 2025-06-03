@@ -22,14 +22,13 @@ public class SignUpWithOAuthReqDto {
     private LocalDate birthDate;
     private Gender gender;
     private String nickname;
-    private UserRole userRole;
     private Provider provider;
     private String providerAccountId;
 
     @Builder
     public SignUpWithOAuthReqDto(
             String loginId, String password, String email, String name, LocalDate birthDate,
-            Gender gender, String nickname, UserRole userRole, Provider provider, String providerAccountId
+            Gender gender, String nickname, Provider provider, String providerAccountId
     ) {
         this.loginId = loginId;
         this.password = password;
@@ -38,7 +37,6 @@ public class SignUpWithOAuthReqDto {
         this.birthDate = birthDate;
         this.gender = gender;
         this.nickname = nickname;
-        this.userRole = userRole;
         this.provider = provider;
         this.providerAccountId = providerAccountId;
     }
@@ -52,7 +50,6 @@ public class SignUpWithOAuthReqDto {
                 .birthDate(signUpWithOAuthReqVo.getBirthDate())
                 .gender(signUpWithOAuthReqVo.getGender())
                 .nickname(signUpWithOAuthReqVo.getNickname())
-                .userRole(signUpWithOAuthReqVo.getUserRole())
                 .provider(signUpWithOAuthReqVo.getProvider())
                 .providerAccountId(signUpWithOAuthReqVo.getProviderAccountId())
                 .build();

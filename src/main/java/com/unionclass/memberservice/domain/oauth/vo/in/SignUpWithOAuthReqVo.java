@@ -41,9 +41,8 @@ public class SignUpWithOAuthReqVo {
     @Size(max = 12, message = "닉네임은 8글자 이하로 입력해주세요.")
     @NotBlank(message = "닉네임을 입력해주세요.")
     private String nickname;
-    private UserRole userRole;
 
-    @NotNull(message = "소셜 로그인 제공자를 입력해주세요. (Kakao)")
+    @NotNull(message = "소셜 로그인 제공자를 입력해주세요. (KAKAO)")
     private Provider provider;
 
     @NotBlank(message = "소셜 계정 식별자를 입력해주세요.")

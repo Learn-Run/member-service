@@ -2,7 +2,6 @@ package com.unionclass.memberservice.domain.member.application;
 
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
-import com.unionclass.memberservice.domain.member.dto.in.ChangeNicknameReqDto;
 import com.unionclass.memberservice.domain.member.dto.in.ChangePasswordReqDto;
 import com.unionclass.memberservice.domain.member.dto.in.ResetPasswordReqDto;
 import com.unionclass.memberservice.domain.member.dto.out.GetMyInfoResDto;
@@ -58,7 +57,6 @@ public class MemberServiceImpl implements MemberService {
                         .email(member.getEmail())
                         .birthDate(member.getBirthDate())
                         .gender(member.getGender())
-                        .nickname(member.getNickname())
                         .userRole(member.getUserRole())
                         .deletedStatus(member.getDeletedStatus())
                         .deletedAt(member.getDeletedAt())
@@ -88,44 +86,12 @@ public class MemberServiceImpl implements MemberService {
                         .email(member.getEmail())
                         .birthDate(member.getBirthDate())
                         .gender(member.getGender())
-                        .nickname(member.getNickname())
                         .userRole(member.getUserRole())
                         .deletedStatus(member.getDeletedStatus())
                         .deletedAt(member.getDeletedAt())
                         .build()
         );
         log.info("임시 비밀번호로 비밀번호 재설정 완료 - 이메일: {}", resetPasswordReqDto.getEmail());
-    }
-
-    /**
-     * 3. 닉네임 변경
-     *
-     * @param changeNicknameReqDto
-     */
-    @Transactional
-    @Override
-    public void changeNickname(ChangeNicknameReqDto changeNicknameReqDto) {
-        Member member = memberRepository.findByMemberUuid(changeNicknameReqDto.getMemberUuid())
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_EXIST_MEMBER));
-
-        memberRepository.save(
-                Member.builder()
-                        .id(member.getId())
-                        .memberUuid(member.getMemberUuid())
-                        .loginId(member.getLoginId())
-                        .password(member.getPassword())
-                        .email(member.getEmail())
-                        .birthDate(member.getBirthDate())
-                        .gender(member.getGender())
-                        .nickname(changeNicknameReqDto.getNickname())
-                        .userRole(member.getUserRole())
-                        .deletedStatus(member.getDeletedStatus())
-                        .deletedAt(member.getDeletedAt())
-                        .build()
-        );
-        log.info("닉네임 변경 완료 - Member UUID: {}, 새로운 닉네임: {}",
-                changeNicknameReqDto.getMemberUuid(),
-                member.getNickname());
     }
 
     /**

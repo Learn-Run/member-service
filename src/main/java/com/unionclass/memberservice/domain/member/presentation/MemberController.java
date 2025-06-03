@@ -3,9 +3,7 @@ package com.unionclass.memberservice.domain.member.presentation;
 import com.unionclass.memberservice.common.response.BaseResponseEntity;
 import com.unionclass.memberservice.common.response.ResponseMessage;
 import com.unionclass.memberservice.domain.member.application.MemberService;
-import com.unionclass.memberservice.domain.member.dto.in.ChangeNicknameReqDto;
 import com.unionclass.memberservice.domain.member.dto.in.ChangePasswordReqDto;
-import com.unionclass.memberservice.domain.member.vo.in.ChangeNicknameReqVo;
 import com.unionclass.memberservice.domain.member.vo.in.ChangePasswordReqVo;
 import com.unionclass.memberservice.domain.member.vo.out.GetMyInfoResVo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,44 +62,6 @@ public class MemberController {
     ) {
         memberService.changePassword(ChangePasswordReqDto.of(memberUuid, passwordReqVo));
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHANGE_PASSWORD.getMessage());
-    }
-
-    /**
-     * 2. 닉네임 변경
-     *
-     * @param memberUuid
-     * @param changeNicknameReqVo
-     * @return
-     */
-    @Operation(
-            summary = "닉네임 변경",
-            description = """
-                    로그인한 회원 본인의 정보를 조회합니다.
-    
-                    [요청 헤더]
-                    - X-Member-UUID : (String) 필수 입력, 회원 고유 식별자
-                    
-                    [응답 필드]
-                    - email : (String) 이메일 주소
-                    - nickname : (String) 닉네임
-                    - gender : (String) 성별 (남성 또는 여성)
-                    - birthDate : (LocalDate) 생년월일
-                    
-                    [처리 로직]
-                    - memberUuid 를 기준으로 회원 정보를 조회
-                    - 존재하지 않는 회원일 경우 예외 발생
-                    
-                    [예외 상황]
-                    - NO_EXIST_MEMBER: 해당 UUID 로 조회된 회원이 없는 경우
-                    """
-    )
-    @PutMapping("/change-nickname")
-    public BaseResponseEntity<Void> changeNickname(
-            @RequestHeader("X-Member-UUID") String memberUuid,
-            @Valid @RequestBody ChangeNicknameReqVo changeNicknameReqVo
-    ) {
-        memberService.changeNickname(ChangeNicknameReqDto.of(memberUuid, changeNicknameReqVo));
-        return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CHANGE_NICKNAME.getMessage());
     }
 
     /**

@@ -43,3 +43,4 @@ jwt:
 logging:
   level:
     root: INFO
+    com.unionclass.memberservice.client: DEBUG

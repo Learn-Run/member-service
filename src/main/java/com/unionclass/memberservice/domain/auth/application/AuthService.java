@@ -1,7 +1,6 @@
 package com.unionclass.memberservice.domain.auth.application;
 
 import com.unionclass.memberservice.domain.auth.dto.in.GetLoginIdReqDto;
-import com.unionclass.memberservice.domain.auth.dto.in.GetNicknameReqDto;
 import com.unionclass.memberservice.domain.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.domain.auth.dto.in.SignUpReqDto;
 import com.unionclass.memberservice.domain.auth.dto.out.SignInResDto;
@@ -14,6 +13,5 @@ public interface AuthService {
     SignInResDto signIn(SignInReqDto signInReqDto);
     void checkEmailDuplicate(EmailReqDto emailReqDto);
     void checkLoginIdDuplicate(GetLoginIdReqDto getLoginIdReqDto);
-    void checkNicknameDuplicate(GetNicknameReqDto nicknameReqDto);
     GetMemberUuidResDto signUpAndReturnMemberUuid(SignUpReqDto signUpReqDto);
 }

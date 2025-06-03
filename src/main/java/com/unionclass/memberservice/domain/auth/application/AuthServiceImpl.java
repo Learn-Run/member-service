@@ -1,7 +1,8 @@
 package com.unionclass.memberservice.domain.auth.application;
 
+import com.unionclass.memberservice.client.profile.application.ProfileServiceClient;
+import com.unionclass.memberservice.client.profile.dto.in.RegisterNicknameReqDto;
 import com.unionclass.memberservice.domain.auth.dto.in.GetLoginIdReqDto;
-import com.unionclass.memberservice.domain.auth.dto.in.GetNicknameReqDto;
 import com.unionclass.memberservice.domain.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.domain.auth.dto.in.SignUpReqDto;
 import com.unionclass.memberservice.domain.auth.dto.out.GetMemberUuidResDto;
@@ -11,6 +12,7 @@ import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
 import com.unionclass.memberservice.domain.email.dto.in.EmailReqDto;
 import com.unionclass.memberservice.domain.member.entity.Member;
+import com.unionclass.memberservice.domain.member.enums.UserRole;
 import com.unionclass.memberservice.domain.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,9 @@ public class AuthServiceImpl implements AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthUtils authUtils;
+    private final ProfileServiceClient profileServiceClient;
+
+    private static final UserRole DEFAULT_USER_ROLE = UserRole.ROLE_MEMBER;
 
     /**
      * /api/v1/auth
@@ -35,7 +40,6 @@ public class AuthServiceImpl implements AuthService {
      * 2. 로그인
      * 3. 이메일 중복 검사
      * 4. 아이디 중복 검사
-     * 5. 닉네임 중복 검사
      */
 
     /**
@@ -47,9 +51,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void signUp(SignUpReqDto signUpReqDto) {
         try {
-            memberRepository.save(
-                    signUpReqDto.toEntity(passwordEncoder.encode(signUpReqDto.getPassword()))
+            Member member = signUpReqDto.toEntity(
+                    passwordEncoder.encode(signUpReqDto.getPassword()),
+                    DEFAULT_USER_ROLE
             );
+            memberRepository.save(member);
+
+            profileServiceClient.registerNickname(
+                    RegisterNicknameReqDto.of(member.getMemberUuid(), signUpReqDto.getNickname()));
         } catch (Exception e) {
             throw new BaseException(ErrorCode.FAILED_TO_SIGN_UP);
         }
@@ -103,29 +112,19 @@ public class AuthServiceImpl implements AuthService {
         log.info("아이디 중복 없음 - 입력 아이디: {}", getLoginIdReqDto.getLoginId());
     }
 
-    /**
-     * 5. 닉네임 중복 검사
-     *
-     * @param nicknameReqDto
-     */
-    @Override
-    public void checkNicknameDuplicate(GetNicknameReqDto nicknameReqDto) {
-        if (memberRepository.findByNickname(nicknameReqDto.getNickname()).isPresent()) {
-            log.warn("닉네임 중복됨 - 입력 닉네임: {}", nicknameReqDto.getNickname());
-            throw new BaseException(ErrorCode.NICKNAME_ALREADY_EXISTS);
-        }
-        log.info("닉네임 중복 없음 - 입력 닉네임: {}", nicknameReqDto.getNickname());
-    }
-
     @Transactional
     @Override
     public GetMemberUuidResDto signUpAndReturnMemberUuid(SignUpReqDto signUpReqDto) {
         try {
-            return GetMemberUuidResDto.from(
-                    memberRepository.save(
-                            signUpReqDto.toEntity(passwordEncoder.encode(signUpReqDto.getPassword()))
-                    )
+            Member member = signUpReqDto.toEntity(
+                    passwordEncoder.encode(signUpReqDto.getPassword()),
+                    DEFAULT_USER_ROLE
             );
+            memberRepository.save(member);
+
+            profileServiceClient.registerNickname(
+                    RegisterNicknameReqDto.of(member.getMemberUuid(), signUpReqDto.getNickname()));
+            return GetMemberUuidResDto.from(member);
         } catch (Exception e) {
             throw new BaseException(ErrorCode.FAILED_TO_SIGN_UP);
         }

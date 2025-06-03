@@ -31,9 +31,6 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(unique = true)
-    private String nickname;
-
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
@@ -44,7 +41,7 @@ public class Member extends BaseEntity {
     @Builder
     public Member(
             Long id, String memberUuid, String loginId, String password,
-            String email, String name, LocalDate birthDate, Gender gender, String nickname,
+            String email, String name, LocalDate birthDate, Gender gender,
             UserRole userRole, Boolean deletedStatus, LocalDateTime deletedAt) {
         this.id = id;
         this.memberUuid = memberUuid;
@@ -54,7 +51,6 @@ public class Member extends BaseEntity {
         this.name = name;
         this.birthDate = birthDate;
         this.gender = gender;
-        this.nickname = nickname;
         this.userRole = userRole;
         this.deletedStatus = deletedStatus;
         this.deletedAt = deletedAt;

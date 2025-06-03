@@ -40,5 +40,4 @@ public class SignUpReqVo {
     @Size(max = 12, message = "닉네임은 8글자 이하로 입력해주세요.")
     @NotBlank(message = "닉네임을 입력해주세요.")
     private String nickname;
-    private UserRole userRole;
 }

@@ -23,12 +23,11 @@ public class SignUpReqDto {
     private LocalDate birthDate;
     private Gender gender;
     private String nickname;
-    private UserRole userRole;
 
     @Builder
     public SignUpReqDto(
             String loginId, String password, String email, String name,
-            LocalDate birthDate, Gender gender, String nickname, UserRole userRole
+            LocalDate birthDate, Gender gender, String nickname
     ) {
         this.loginId = loginId;
         this.password = password;
@@ -37,7 +36,6 @@ public class SignUpReqDto {
         this.birthDate = birthDate;
         this.gender = gender;
         this.nickname = nickname;
-        this.userRole = userRole;
     }
 
     public static SignUpReqDto from(SignUpReqVo signUpReqVo) {
@@ -49,7 +47,6 @@ public class SignUpReqDto {
                 .birthDate(signUpReqVo.getBirthDate())
                 .gender(signUpReqVo.getGender())
                 .nickname(signUpReqVo.getNickname())
-                .userRole(signUpReqVo.getUserRole())
                 .build();
     }
 
@@ -62,11 +59,10 @@ public class SignUpReqDto {
                 .birthDate(signUpWithOAuthReqDto.getBirthDate())
                 .gender(signUpWithOAuthReqDto.getGender())
                 .nickname(signUpWithOAuthReqDto.getNickname())
-                .userRole(signUpWithOAuthReqDto.getUserRole())
                 .build();
     }
 
-    public Member toEntity(String inputPassword) {
+    public Member toEntity(String inputPassword, UserRole userRole) {
         return Member.builder()
                 .memberUuid(UUID.randomUUID().toString())
                 .loginId(loginId)
@@ -75,7 +71,6 @@ public class SignUpReqDto {
                 .name(name)
                 .birthDate(birthDate)
                 .gender(gender)
-                .nickname(nickname)
                 .userRole(userRole)
                 .deletedStatus(false)
                 .build();
