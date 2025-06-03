@@ -1,9 +1,10 @@
 package com.unionclass.memberservice.auth.application;
 
-import com.unionclass.memberservice.auth.dto.in.LoginIdReqDto;
-import com.unionclass.memberservice.auth.dto.in.NicknameReqDto;
+import com.unionclass.memberservice.auth.dto.in.GetLoginIdReqDto;
+import com.unionclass.memberservice.auth.dto.in.GetNicknameReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.auth.dto.in.SignUpReqDto;
+import com.unionclass.memberservice.auth.dto.out.GetMemberUuidResDto;
 import com.unionclass.memberservice.auth.dto.out.SignInResDto;
 import com.unionclass.memberservice.auth.util.AuthUtils;
 import com.unionclass.memberservice.common.exception.BaseException;
@@ -46,7 +47,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void signUp(SignUpReqDto signUpReqDto) {
         try {
-            memberRepository.save(signUpReqDto.toEntity(passwordEncoder.encode(signUpReqDto.getPassword())));
+            memberRepository.save(
+                    signUpReqDto.toEntity(passwordEncoder.encode(signUpReqDto.getPassword()))
+            );
         } catch (Exception e) {
             throw new BaseException(ErrorCode.FAILED_TO_SIGN_UP);
         }
@@ -64,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             Member member = memberRepository.findByLoginId(signInReqDto.getLoginId())
                     .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_SIGN_IN));
-            return SignInResDto.from(
+            return SignInResDto.of(
                     member,
                     authUtils.createToken(authUtils.authenticate(member, signInReqDto.getPassword())).substring(7));
         } catch (Exception e) {
@@ -89,15 +92,15 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 4. 아이디 중복 검사
      *
-     * @param loginIdReqDto
+     * @param getLoginIdReqDto
      */
     @Override
-    public void checkLoginIdDuplicate(LoginIdReqDto loginIdReqDto) {
-        if (memberRepository.findByLoginId(loginIdReqDto.getLoginId()).isPresent()) {
-            log.warn("아이디 중복됨 - 입력 아이디: {}", loginIdReqDto.getLoginId());
+    public void checkLoginIdDuplicate(GetLoginIdReqDto getLoginIdReqDto) {
+        if (memberRepository.findByLoginId(getLoginIdReqDto.getLoginId()).isPresent()) {
+            log.warn("아이디 중복됨 - 입력 아이디: {}", getLoginIdReqDto.getLoginId());
             throw new BaseException(ErrorCode.LOGIN_ID_ALREADY_EXISTS);
         }
-        log.info("아이디 중복 없음 - 입력 아이디: {}", loginIdReqDto.getLoginId());
+        log.info("아이디 중복 없음 - 입력 아이디: {}", getLoginIdReqDto.getLoginId());
     }
 
     /**
@@ -106,11 +109,25 @@ public class AuthServiceImpl implements AuthService {
      * @param nicknameReqDto
      */
     @Override
-    public void checkNicknameDuplicate(NicknameReqDto nicknameReqDto) {
+    public void checkNicknameDuplicate(GetNicknameReqDto nicknameReqDto) {
         if (memberRepository.findByNickname(nicknameReqDto.getNickname()).isPresent()) {
             log.warn("닉네임 중복됨 - 입력 닉네임: {}", nicknameReqDto.getNickname());
             throw new BaseException(ErrorCode.NICKNAME_ALREADY_EXISTS);
         }
         log.info("닉네임 중복 없음 - 입력 닉네임: {}", nicknameReqDto.getNickname());
+    }
+
+    @Transactional
+    @Override
+    public GetMemberUuidResDto signUpAndReturnMemberUuid(SignUpReqDto signUpReqDto) {
+        try {
+            return GetMemberUuidResDto.from(
+                    memberRepository.save(
+                            signUpReqDto.toEntity(passwordEncoder.encode(signUpReqDto.getPassword()))
+                    )
+            );
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.FAILED_TO_SIGN_UP);
+        }
     }
 }

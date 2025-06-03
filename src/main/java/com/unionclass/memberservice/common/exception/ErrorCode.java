@@ -8,10 +8,24 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode {
 
-    // 888 : internal server error
+    /**
+     * 600 ~ 699 : gateway service error
+     */
+    NO_JWT_TOKEN(HttpStatus.UNAUTHORIZED, false, 600, "JWT 토큰이 존재하지 않습니다."),
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, false, 601, "유효하지 않은 JWT 토큰입니다."),
+
+    /**
+     * 700 ~ 799 : discovery service error
+     */
+
+    /**
+     * 800 ~ 899 : internal server error
+     */
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, 888, "서버에서 요청을 처리하지 못했습니다."),
 
-    // 999 : validation error
+    /**
+     * 900 ~ 999 : validation error
+     */
 
     /**
      * 1000 ~ 1999 : member service error
@@ -32,10 +46,19 @@ public enum ErrorCode {
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, false, 1107, "이미 등록된 이메일입니다."),
     LOGIN_ID_ALREADY_EXISTS(HttpStatus.CONFLICT, false, 1108, "이미 등록된 아이디입니다."),
     NICKNAME_ALREADY_EXISTS(HttpStatus.CONFLICT, false, 1109, "이미 등록된 닉네임입니다."),
-    INVALID_PASSWORD_RULE(HttpStatus.BAD_REQUEST, false, 1110, "length 에 4이상의 수를 입력해주세요."),
+    INVALID_PASSWORD_RULE(HttpStatus.BAD_REQUEST, false, 1110, "length 에 4 이상의 수를 입력해주세요."),
     INVALID_EMAIL_TITLE_VALUE(HttpStatus.BAD_REQUEST, false, 1111, "유효하지 않은 이메일 제목 정보입니다."),
     INVALID_PASSWORD_LENGTH(HttpStatus.BAD_REQUEST, false, 1112, "비밀번호는 8자 이상 20자 이하로 입력해주세요."),
-    INVALID_CURRENT_PASSWORD(HttpStatus.BAD_REQUEST, false, 1113, "현재 비밀번호가 일치하지 않습니다.")
+    INVALID_CURRENT_PASSWORD(HttpStatus.BAD_REQUEST, false, 1113, "현재 비밀번호가 일치하지 않습니다."),
+    INVALID_OAUTH_PROVIDER_VALUE(HttpStatus.BAD_REQUEST, false, 1114, "유효하지 않은 OAuth Provider 입니다."),
+    NO_EXIST_OAUTH_MEMBER(HttpStatus.NOT_FOUND, false, 1115, "해당 소셜 계정과 연동된 회원이 없습니다. 회원가입을 먼저 진행해주세요."),
+    OAUTH_ACCOUNT_ALREADY_BOUND(HttpStatus.CONFLICT, false, 1116, "해당 OAuth 계정은 이미 연동되어 있습니다."),
+    OAUTH_PROVIDER_ALREADY_BOUND(HttpStatus.CONFLICT, false, 1117, "해당 회원은 이미 해당 OAuth Provider 와 연동되어 있습니다."),
+    FAILED_TO_CREATE_AGREEMENT(HttpStatus.INTERNAL_SERVER_ERROR, false, 1118, "약관동의 항목 생성에 실패하였습니다."),
+    FAILED_TO_FIND_AGREEMENT(HttpStatus.BAD_REQUEST, false, 1119, "약관동의 항목 조회에 실패하였습니다."),
+    MUST_AGREE_REQUIRED_AGREEMENT(HttpStatus.BAD_REQUEST, false, 1120, "필수 동의 항목에는 반드시 동의해야 합니다."),
+    FAILED_TO_FIND_MEMBER_AGREEMENT(HttpStatus.BAD_REQUEST, false, 1121, "회원 약관동의 항목에 대한 정보 조회에 실패하였습니다."),
+    CANNOT_UPDATE_REQUIRED_AGREEMENT(HttpStatus.BAD_REQUEST, false, 1122, "필수 동의 항목은 동의 상태를 변경할 수 없습니다.")
     ;
 
     /**

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class NicknameReqVo {
+public class GetNicknameReqVo {
 
     @NotBlank(message = "닉네임을 입력해주세요.")
     private String nickname;
