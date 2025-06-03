@@ -31,7 +31,6 @@ public class EmailServiceImpl implements EmailService {
     private final EmailTemplateProvider emailTemplateProvider;
     private final JavaMailSender mailSender;
     private final MemberService memberService;
-    private final RedissonClient redissonClient;
 
     private static final String EMAIL_VERIFY_KEY_PREFIX = "verify:email:";
     private static final long EMAIL_CODE_TTL = 5L;
