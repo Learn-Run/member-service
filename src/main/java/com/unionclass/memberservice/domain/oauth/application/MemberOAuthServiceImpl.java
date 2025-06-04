@@ -3,7 +3,7 @@ package com.unionclass.memberservice.domain.oauth.application;
 import com.unionclass.memberservice.domain.auth.application.AuthService;
 import com.unionclass.memberservice.domain.auth.dto.in.SignUpReqDto;
 import com.unionclass.memberservice.domain.auth.dto.out.SignInResDto;
-import com.unionclass.memberservice.domain.auth.util.AuthUtils;
+import com.unionclass.memberservice.domain.auth.util.AuthUtilsImpl;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
 import com.unionclass.memberservice.common.security.CustomUserDetailsService;
@@ -26,7 +26,7 @@ public class MemberOAuthServiceImpl implements  MemberOAuthService {
 
     private final MemberOAuthRepository memberOAuthRepository;
     private final CustomUserDetailsService customUserDetailsService;
-    private final AuthUtils authUtils;
+    private final AuthUtilsImpl authUtils;
     private final AuthService authService;
 
     /**

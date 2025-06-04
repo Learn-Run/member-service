@@ -21,12 +21,9 @@ public class RegisterMemberAgreementReqDto {
         this.agreementStatus = agreementStatus;
     }
 
-    public static RegisterMemberAgreementReqDto of(
-            String memberUuid,
-            RegisterMemberAgreementReqVo registerMemberAgreementReqVo
-    ) {
+    public static RegisterMemberAgreementReqDto from(RegisterMemberAgreementReqVo registerMemberAgreementReqVo) {
         return RegisterMemberAgreementReqDto.builder()
-                .memberUuid(memberUuid)
+                .memberUuid(registerMemberAgreementReqVo.getMemberUuid())
                 .agreementUuid(registerMemberAgreementReqVo.getAgreementUuid())
                 .agreementStatus(registerMemberAgreementReqVo.getAgreementStatus())
                 .build();

@@ -8,12 +8,15 @@ import com.unionclass.memberservice.domain.auth.dto.in.SignUpReqDto;
 import com.unionclass.memberservice.domain.auth.dto.out.GetMemberUuidResDto;
 import com.unionclass.memberservice.domain.auth.dto.out.SignInResDto;
 import com.unionclass.memberservice.domain.auth.util.AuthUtils;
+import com.unionclass.memberservice.domain.auth.util.AuthUtilsImpl;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
 import com.unionclass.memberservice.domain.email.dto.in.EmailReqDto;
 import com.unionclass.memberservice.domain.member.entity.Member;
 import com.unionclass.memberservice.domain.member.enums.UserRole;
 import com.unionclass.memberservice.domain.member.infrastructure.MemberRepository;
+import com.unionclass.memberservice.domain.member.util.MemberUtils;
+import com.unionclass.memberservice.domain.memberagreement.application.MemberAgreementService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,11 +30,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthServiceImpl implements AuthService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
     private final AuthUtils authUtils;
+    private final MemberUtils memberUtils;
     private final ProfileServiceClient profileServiceClient;
-
-    private static final UserRole DEFAULT_USER_ROLE = UserRole.ROLE_MEMBER;
+    private final MemberAgreementService memberAgreementService;
 
     /**
      * /api/v1/auth
@@ -52,15 +54,22 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void signUp(SignUpReqDto signUpReqDto) {
         try {
-            Member member = signUpReqDto.toEntity(
-                    passwordEncoder.encode(signUpReqDto.getPassword()),
-                    DEFAULT_USER_ROLE
-            );
+            Member member = memberUtils.createMember(signUpReqDto);
             memberRepository.save(member);
+            log.info("회원 저장 성공 - memberUuid: {}", member.getMemberUuid());
 
             profileServiceClient.registerNickname(
                     RegisterNicknameReqDto.of(member.getMemberUuid(), signUpReqDto.getNickname()));
+            log.info("닉네임 등록 성공 - memberUuid: {}, nickname: {}",
+                    member.getMemberUuid(), signUpReqDto.getNickname());
+
+            signUpReqDto.getCheckMemberAgreementReqVoList().stream()
+                    .map(vo -> vo.toDto(member.getMemberUuid()))
+                    .forEach(memberAgreementService::registerMemberAgreement);
+
+            log.info("회원가입 전체 완료 - memberUuid: {}", member.getMemberUuid());
         } catch (Exception e) {
+            log.error("회원가입 실패 - 입력 데이터: {}, 에러 메시지: {}", signUpReqDto, e.getMessage(), e);
             throw new BaseException(ErrorCode.FAILED_TO_SIGN_UP);
         }
     }
@@ -123,14 +132,20 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public GetMemberUuidResDto signUpAndReturnMemberUuid(SignUpReqDto signUpReqDto) {
         try {
-            Member member = signUpReqDto.toEntity(
-                    passwordEncoder.encode(signUpReqDto.getPassword()),
-                    DEFAULT_USER_ROLE
-            );
+            Member member = memberUtils.createMember(signUpReqDto);
             memberRepository.save(member);
+            log.info("회원 저장 성공 - memberUuid: {}", member.getMemberUuid());
 
             profileServiceClient.registerNickname(
                     RegisterNicknameReqDto.of(member.getMemberUuid(), signUpReqDto.getNickname()));
+            log.info("닉네임 등록 성공 - memberUuid: {}, nickname: {}",
+                    member.getMemberUuid(), signUpReqDto.getNickname());
+
+            signUpReqDto.getCheckMemberAgreementReqVoList().stream()
+                    .map(vo -> vo.toDto(member.getMemberUuid()))
+                    .forEach(memberAgreementService::registerMemberAgreement);
+
+            log.info("회원가입 전체 완료 - memberUuid: {}", member.getMemberUuid());
             return GetMemberUuidResDto.from(member);
         } catch (Exception e) {
             throw new BaseException(ErrorCode.FAILED_TO_SIGN_UP);

@@ -2,11 +2,14 @@ package com.unionclass.memberservice.domain.oauth.vo.in;
 
 import com.unionclass.memberservice.domain.member.enums.Gender;
 import com.unionclass.memberservice.domain.member.enums.UserRole;
+import com.unionclass.memberservice.domain.memberagreement.vo.in.CheckMemberAgreementReqVo;
+import com.unionclass.memberservice.domain.memberagreement.vo.in.RegisterMemberAgreementReqVo;
 import com.unionclass.memberservice.domain.oauth.enums.Provider;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 public class SignUpWithOAuthReqVo {
@@ -41,6 +44,8 @@ public class SignUpWithOAuthReqVo {
     @Size(max = 12, message = "닉네임은 8글자 이하로 입력해주세요.")
     @NotBlank(message = "닉네임을 입력해주세요.")
     private String nickname;
+
+    private List<CheckMemberAgreementReqVo> checkMemberAgreementReqVoList;
 
     @NotNull(message = "소셜 로그인 제공자를 입력해주세요. (KAKAO)")
     private Provider provider;

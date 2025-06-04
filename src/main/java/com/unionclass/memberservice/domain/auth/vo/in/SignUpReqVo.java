@@ -1,11 +1,13 @@
 package com.unionclass.memberservice.domain.auth.vo.in;
 
 import com.unionclass.memberservice.domain.member.enums.Gender;
-import com.unionclass.memberservice.domain.member.enums.UserRole;
+import com.unionclass.memberservice.domain.memberagreement.vo.in.CheckMemberAgreementReqVo;
+import com.unionclass.memberservice.domain.memberagreement.vo.in.RegisterMemberAgreementReqVo;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 public class SignUpReqVo {
@@ -40,4 +42,6 @@ public class SignUpReqVo {
     @Size(max = 12, message = "닉네임은 8글자 이하로 입력해주세요.")
     @NotBlank(message = "닉네임을 입력해주세요.")
     private String nickname;
+
+    private List<CheckMemberAgreementReqVo> agreementCheckList;
 }

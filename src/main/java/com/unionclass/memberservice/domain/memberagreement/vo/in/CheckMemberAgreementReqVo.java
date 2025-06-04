@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class RegisterMemberAgreementReqVo {
-
-    @NotNull(message = "memberUuid 는 필수 입력값입니다.")
-    private String memberUuid;
+public class CheckMemberAgreementReqVo {
 
     @NotNull(message = "agreementUuid 는 필수 입력값입니다.")
     private Long agreementUuid;
@@ -20,8 +17,7 @@ public class RegisterMemberAgreementReqVo {
     private Boolean agreementStatus;
 
     @Builder
-    public RegisterMemberAgreementReqVo(String memberUuid, Long agreementUuid, Boolean agreementStatus) {
-        this.memberUuid = memberUuid;
+    public CheckMemberAgreementReqVo(Long agreementUuid, Boolean agreementStatus) {
         this.agreementUuid = agreementUuid;
         this.agreementStatus = agreementStatus;
     }

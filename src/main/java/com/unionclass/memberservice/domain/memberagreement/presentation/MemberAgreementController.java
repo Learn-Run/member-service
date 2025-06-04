@@ -39,11 +39,9 @@ public class MemberAgreementController {
             summary = "회원 약관동의 여부 등록",
             description = """
                     회원이 특정 약관 항목에 대해 동의 또는 비동의 여부를 등록합니다.
-    
-                    [요청 헤더]
-                    - X-Member-UUID : (String) 필수 입력, 회원 식별자
                     
                     [요청 바디]
+                    - memberUuid : (String) 필수 입력, 회원의 고유 식별자
                     - agreementUuid : (Long)  필수 입력, 약관 항목의 고유 식별자
                     - agreementStatus : (Boolean) 필수 입력, 동의 여부 (true: 동의, false: 비동의)
                     
@@ -58,11 +56,10 @@ public class MemberAgreementController {
     )
     @PostMapping
     public BaseResponseEntity<Void> registerMemberAgreement(
-            @RequestHeader("X-Member-UUID") String memberUuid,
             @Valid @RequestBody RegisterMemberAgreementReqVo registerMemberAgreementReqVo
     ) {
         memberAgreementService.registerMemberAgreement(
-                RegisterMemberAgreementReqDto.of(memberUuid, registerMemberAgreementReqVo)
+                RegisterMemberAgreementReqDto.from(registerMemberAgreementReqVo)
         );
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_REGISTER_MEMBER_AGREEMENT.getMessage());
     }

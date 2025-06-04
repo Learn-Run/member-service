@@ -4,12 +4,14 @@ import com.unionclass.memberservice.domain.auth.vo.in.SignUpReqVo;
 import com.unionclass.memberservice.domain.member.entity.Member;
 import com.unionclass.memberservice.domain.member.enums.Gender;
 import com.unionclass.memberservice.domain.member.enums.UserRole;
+import com.unionclass.memberservice.domain.memberagreement.vo.in.CheckMemberAgreementReqVo;
 import com.unionclass.memberservice.domain.oauth.dto.in.SignUpWithOAuthReqDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -23,11 +25,12 @@ public class SignUpReqDto {
     private LocalDate birthDate;
     private Gender gender;
     private String nickname;
+    private List<CheckMemberAgreementReqVo> checkMemberAgreementReqVoList;
 
     @Builder
-    public SignUpReqDto(
-            String loginId, String password, String email, String name,
-            LocalDate birthDate, Gender gender, String nickname
+    public SignUpReqDto(String loginId, String password, String email, String name,
+                        LocalDate birthDate, Gender gender, String nickname,
+                        List<CheckMemberAgreementReqVo> checkMemberAgreementReqVoList
     ) {
         this.loginId = loginId;
         this.password = password;
@@ -36,6 +39,7 @@ public class SignUpReqDto {
         this.birthDate = birthDate;
         this.gender = gender;
         this.nickname = nickname;
+        this.checkMemberAgreementReqVoList = checkMemberAgreementReqVoList;
     }
 
     public static SignUpReqDto from(SignUpReqVo signUpReqVo) {
@@ -47,6 +51,7 @@ public class SignUpReqDto {
                 .birthDate(signUpReqVo.getBirthDate())
                 .gender(signUpReqVo.getGender())
                 .nickname(signUpReqVo.getNickname())
+                .checkMemberAgreementReqVoList(signUpReqVo.getAgreementCheckList())
                 .build();
     }
 
@@ -59,6 +64,7 @@ public class SignUpReqDto {
                 .birthDate(signUpWithOAuthReqDto.getBirthDate())
                 .gender(signUpWithOAuthReqDto.getGender())
                 .nickname(signUpWithOAuthReqDto.getNickname())
+                .checkMemberAgreementReqVoList(signUpWithOAuthReqDto.getCheckMemberAgreementReqVoList())
                 .build();
     }
 
