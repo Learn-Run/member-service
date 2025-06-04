@@ -1,7 +1,6 @@
 package com.unionclass.memberservice.domain.auth.vo.in;
 
 import com.unionclass.memberservice.domain.member.enums.Gender;
-import com.unionclass.memberservice.domain.memberagreement.vo.in.CheckMemberAgreementReqVo;
 import com.unionclass.memberservice.domain.memberagreement.vo.in.RegisterMemberAgreementReqVo;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -43,5 +42,5 @@ public class SignUpReqVo {
     @NotBlank(message = "닉네임을 입력해주세요.")
     private String nickname;
 
-    private List<CheckMemberAgreementReqVo> agreementCheckList;
+    private List<RegisterMemberAgreementReqVo> agreementCheckList;
 }

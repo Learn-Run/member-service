@@ -1,7 +1,7 @@
 package com.unionclass.memberservice.domain.oauth.dto.in;
 
 import com.unionclass.memberservice.domain.member.enums.Gender;
-import com.unionclass.memberservice.domain.memberagreement.vo.in.CheckMemberAgreementReqVo;
+import com.unionclass.memberservice.domain.memberagreement.vo.in.RegisterMemberAgreementReqVo;
 import com.unionclass.memberservice.domain.oauth.entity.MemberOAuth;
 import com.unionclass.memberservice.domain.oauth.enums.Provider;
 import com.unionclass.memberservice.domain.oauth.vo.in.SignUpWithOAuthReqVo;
@@ -23,14 +23,14 @@ public class SignUpWithOAuthReqDto {
     private LocalDate birthDate;
     private Gender gender;
     private String nickname;
-    private List<CheckMemberAgreementReqVo> checkMemberAgreementReqVoList;
+    private List<RegisterMemberAgreementReqVo> registerMemberAgreementReqVoList;
     private Provider provider;
     private String providerAccountId;
 
     @Builder
     public SignUpWithOAuthReqDto(
             String loginId, String password, String email, String name, LocalDate birthDate,
-            Gender gender, String nickname, List<CheckMemberAgreementReqVo> checkMemberAgreementReqVoList,
+            Gender gender, String nickname, List<RegisterMemberAgreementReqVo> registerMemberAgreementReqVoList,
             Provider provider, String providerAccountId
     ) {
         this.loginId = loginId;
@@ -40,7 +40,7 @@ public class SignUpWithOAuthReqDto {
         this.birthDate = birthDate;
         this.gender = gender;
         this.nickname = nickname;
-        this.checkMemberAgreementReqVoList = checkMemberAgreementReqVoList;
+        this.registerMemberAgreementReqVoList = registerMemberAgreementReqVoList;
         this.provider = provider;
         this.providerAccountId = providerAccountId;
     }
@@ -54,7 +54,7 @@ public class SignUpWithOAuthReqDto {
                 .birthDate(signUpWithOAuthReqVo.getBirthDate())
                 .gender(signUpWithOAuthReqVo.getGender())
                 .nickname(signUpWithOAuthReqVo.getNickname())
-                .checkMemberAgreementReqVoList(signUpWithOAuthReqVo.getCheckMemberAgreementReqVoList())
+                .registerMemberAgreementReqVoList(signUpWithOAuthReqVo.getRegisterMemberAgreementReqVoList())
                 .provider(signUpWithOAuthReqVo.getProvider())
                 .providerAccountId(signUpWithOAuthReqVo.getProviderAccountId())
                 .build();

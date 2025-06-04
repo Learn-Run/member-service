@@ -1,8 +1,6 @@
 package com.unionclass.memberservice.domain.oauth.vo.in;
 
 import com.unionclass.memberservice.domain.member.enums.Gender;
-import com.unionclass.memberservice.domain.member.enums.UserRole;
-import com.unionclass.memberservice.domain.memberagreement.vo.in.CheckMemberAgreementReqVo;
 import com.unionclass.memberservice.domain.memberagreement.vo.in.RegisterMemberAgreementReqVo;
 import com.unionclass.memberservice.domain.oauth.enums.Provider;
 import jakarta.validation.constraints.*;
@@ -45,7 +43,7 @@ public class SignUpWithOAuthReqVo {
     @NotBlank(message = "닉네임을 입력해주세요.")
     private String nickname;
 
-    private List<CheckMemberAgreementReqVo> checkMemberAgreementReqVoList;
+    private List<RegisterMemberAgreementReqVo> registerMemberAgreementReqVoList;
 
     @NotNull(message = "소셜 로그인 제공자를 입력해주세요. (KAKAO)")
     private Provider provider;

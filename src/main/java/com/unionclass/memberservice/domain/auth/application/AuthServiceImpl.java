@@ -8,18 +8,15 @@ import com.unionclass.memberservice.domain.auth.dto.in.SignUpReqDto;
 import com.unionclass.memberservice.domain.auth.dto.out.GetMemberUuidResDto;
 import com.unionclass.memberservice.domain.auth.dto.out.SignInResDto;
 import com.unionclass.memberservice.domain.auth.util.AuthUtils;
-import com.unionclass.memberservice.domain.auth.util.AuthUtilsImpl;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
 import com.unionclass.memberservice.domain.email.dto.in.EmailReqDto;
 import com.unionclass.memberservice.domain.member.entity.Member;
-import com.unionclass.memberservice.domain.member.enums.UserRole;
 import com.unionclass.memberservice.domain.member.infrastructure.MemberRepository;
 import com.unionclass.memberservice.domain.member.util.MemberUtils;
 import com.unionclass.memberservice.domain.memberagreement.application.MemberAgreementService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
             log.info("닉네임 등록 성공 - memberUuid: {}, nickname: {}",
                     member.getMemberUuid(), signUpReqDto.getNickname());
 
-            signUpReqDto.getCheckMemberAgreementReqVoList().stream()
+            signUpReqDto.getRegisterMemberAgreementReqVoList().stream()
                     .map(vo -> vo.toDto(member.getMemberUuid()))
                     .forEach(memberAgreementService::registerMemberAgreement);
 
@@ -141,7 +138,7 @@ public class AuthServiceImpl implements AuthService {
             log.info("닉네임 등록 성공 - memberUuid: {}, nickname: {}",
                     member.getMemberUuid(), signUpReqDto.getNickname());
 
-            signUpReqDto.getCheckMemberAgreementReqVoList().stream()
+            signUpReqDto.getRegisterMemberAgreementReqVoList().stream()
                     .map(vo -> vo.toDto(member.getMemberUuid()))
                     .forEach(memberAgreementService::registerMemberAgreement);
 

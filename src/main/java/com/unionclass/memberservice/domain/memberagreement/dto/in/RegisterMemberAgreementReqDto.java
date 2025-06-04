@@ -1,7 +1,6 @@
 package com.unionclass.memberservice.domain.memberagreement.dto.in;
 
 import com.unionclass.memberservice.domain.memberagreement.entity.MemberAgreement;
-import com.unionclass.memberservice.domain.memberagreement.vo.in.RegisterMemberAgreementReqVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,14 +18,6 @@ public class RegisterMemberAgreementReqDto {
         this.memberUuid = memberUuid;
         this.agreementUuid = agreementUuid;
         this.agreementStatus = agreementStatus;
-    }
-
-    public static RegisterMemberAgreementReqDto from(RegisterMemberAgreementReqVo registerMemberAgreementReqVo) {
-        return RegisterMemberAgreementReqDto.builder()
-                .memberUuid(registerMemberAgreementReqVo.getMemberUuid())
-                .agreementUuid(registerMemberAgreementReqVo.getAgreementUuid())
-                .agreementStatus(registerMemberAgreementReqVo.getAgreementStatus())
-                .build();
     }
 
     public MemberAgreement toEntity() {
