@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetAgreementResDto {
 
-    private Long agreementId;
+    private Long agreementUuid;
     private String agreementName;
     private String agreementContent;
     private Boolean required;
 
     @Builder
-    public GetAgreementResDto(Long agreementId, String agreementName, String agreementContent, Boolean required) {
-        this.agreementId = agreementId;
+    public GetAgreementResDto(Long agreementUuid, String agreementName, String agreementContent, Boolean required) {
+        this.agreementUuid = agreementUuid;
         this.agreementName = agreementName;
         this.agreementContent = agreementContent;
         this.required = required;
@@ -25,7 +25,7 @@ public class GetAgreementResDto {
 
     public static GetAgreementResDto from(Agreement agreement) {
         return GetAgreementResDto.builder()
-                .agreementId(agreement.getId())
+                .agreementUuid(agreement.getUuid())
                 .agreementName(agreement.getName())
                 .agreementContent(agreement.getContent())
                 .required(agreement.getRequired())
@@ -34,7 +34,7 @@ public class GetAgreementResDto {
 
     public GetAgreementResVo toVo() {
         return GetAgreementResVo.builder()
-                .agreementId(agreementId)
+                .agreementUuid(agreementUuid.toString())
                 .agreementName(agreementName)
                 .agreementContent(agreementContent)
                 .required(required)

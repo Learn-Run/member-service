@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetAgreementResVo {
 
-    private Long agreementId;
+    private String agreementUuid;
     private String agreementName;
     private String agreementContent;
     private Boolean required;
 
     @Builder
-    public GetAgreementResVo(Long agreementId, String agreementName, String agreementContent, Boolean required) {
-        this.agreementId = agreementId;
+    public GetAgreementResVo(String agreementUuid, String agreementName, String agreementContent, Boolean required) {
+        this.agreementUuid = agreementUuid;
         this.agreementName = agreementName;
         this.agreementContent = agreementContent;
         this.required = required;
