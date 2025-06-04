@@ -26,7 +26,7 @@ public class UpdateMemberAgreementReqDto {
     ) {
         return UpdateMemberAgreementReqDto.builder()
                 .memberUuid(memberUuid)
-                .agreementUuid(updateMemberAgreementReqVo.getAgreementUuid())
+                .agreementUuid(Long.parseLong(updateMemberAgreementReqVo.getAgreementUuid()))
                 .agreementStatus(updateMemberAgreementReqVo.getAgreementStatus())
                 .build();
     }

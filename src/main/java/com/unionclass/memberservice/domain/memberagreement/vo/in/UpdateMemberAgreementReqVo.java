@@ -7,7 +7,7 @@ import lombok.Getter;
 public class UpdateMemberAgreementReqVo {
 
     @NotNull(message = "agreementUuid 는 필수 입력값입니다.")
-    private Long agreementUuid;
+    private String agreementUuid;
 
     @NotNull(message = "약관 동의 여부은 필수 입력값입니다.")
     private Boolean agreementStatus;
