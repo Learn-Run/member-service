@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface AgreementService {
     void createAgreement(CreateAgreementReqDto createAgreementReqDto);
-    GetAgreementResDto getAgreement(Long agreementUuid);
+    GetAgreementResDto getAgreement(String agreementUuid);
     List<GetValidAgreementUuidResDto> getAllValidAgreementUuids();
     void updateAgreement(UpdateAgreementReqDto updateAgreementReqDto);
     void deleteAgreement(Long agreementUuid);

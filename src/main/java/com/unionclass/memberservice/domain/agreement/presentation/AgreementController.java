@@ -97,7 +97,7 @@ public class AgreementController {
     )
     @GetMapping("/{agreementUuid}")
     public BaseResponseEntity<GetAgreementResVo> getAgreement(
-            @PathVariable Long agreementUuid
+            @PathVariable String agreementUuid
     ) {
         return new BaseResponseEntity<>(
                 ResponseMessage.SUCCESS_GET_AGREEMENT.getMessage(),
