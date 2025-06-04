@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
                 @Tag(name = "auth", description = "인증 관련 API 입니다."),
                 @Tag(name = "oauth", description = "소셜 로그인 관련 API 입니다."),
                 @Tag(name = "email", description = "이메일 관련 API 입니다."),
+                @Tag(name = "grade", description = "등급 관련 API 입니다."),
                 @Tag(name = "member", description = "회원정보 관련 API 입니다."),
                 @Tag(name = "member_agreement", description = "회원 약관동의 항목 관련 API 입니다."),
                 @Tag(name = "agreement", description = "약관동의 항목 관련 API 입니다.")

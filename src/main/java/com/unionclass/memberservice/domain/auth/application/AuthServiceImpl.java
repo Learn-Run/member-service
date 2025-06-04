@@ -65,6 +65,9 @@ public class AuthServiceImpl implements AuthService {
                     .forEach(memberAgreementService::registerMemberAgreement);
 
             log.info("회원가입 전체 완료 - memberUuid: {}", member.getMemberUuid());
+            // todo : 닉네임 저장 실패하면, 로그인해서 따로 입력하게
+            // todo : 닉네임 동시성 처리
+            // todo : 닉네임 저장 -> 카프카 (비동기) 고려
         } catch (Exception e) {
             log.error("회원가입 실패 - 입력 데이터: {}, 에러 메시지: {}", signUpReqDto, e.getMessage(), e);
             throw new BaseException(ErrorCode.FAILED_TO_SIGN_UP);
