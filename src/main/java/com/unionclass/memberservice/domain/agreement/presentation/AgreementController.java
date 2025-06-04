@@ -166,7 +166,7 @@ public class AgreementController {
     )
     @PutMapping("/{agreementUuid}")
     public BaseResponseEntity<Void> updateAgreement(
-            @PathVariable Long agreementUuid,
+            @PathVariable String agreementUuid,
             @Valid @RequestBody UpdateAgreementReqVo updateAgreementReqVo
     ) {
         agreementService.updateAgreement(UpdateAgreementReqDto.of(agreementUuid, updateAgreementReqVo));
