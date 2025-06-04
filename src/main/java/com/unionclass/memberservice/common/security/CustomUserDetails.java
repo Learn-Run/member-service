@@ -1,7 +1,7 @@
 package com.unionclass.memberservice.common.security;
 
-import com.unionclass.memberservice.member.entity.Member;
-import com.unionclass.memberservice.member.enums.UserRole;
+import com.unionclass.memberservice.domain.member.entity.Member;
+import com.unionclass.memberservice.domain.member.enums.UserRole;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
