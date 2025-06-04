@@ -198,7 +198,7 @@ public class AgreementController {
     )
     @PutMapping("/{agreementUuid}/delete")
     public BaseResponseEntity<Void> deleteAgreement(
-            @PathVariable Long agreementUuid
+            @PathVariable String agreementUuid
     ) {
         agreementService.deleteAgreement(agreementUuid);
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_DELETE_AGREEMENT.getMessage());

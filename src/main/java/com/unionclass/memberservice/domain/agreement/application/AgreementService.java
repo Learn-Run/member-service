@@ -13,6 +13,6 @@ public interface AgreementService {
     GetAgreementResDto getAgreement(String agreementUuid);
     List<GetValidAgreementUuidResDto> getAllValidAgreementUuids();
     void updateAgreement(UpdateAgreementReqDto updateAgreementReqDto);
-    void deleteAgreement(Long agreementUuid);
+    void deleteAgreement(String agreementUuid);
     GetAgreementRequiredResDto getAgreementRequired(Long agreementUuid);
 }
