@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetValidAgreementUuidResVo {
 
-    private Long agreementUuid;
+    private String agreementUuid;
 
     @Builder
-    public GetValidAgreementUuidResVo(Long agreementUuid) {
+    public GetValidAgreementUuidResVo(String agreementUuid) {
         this.agreementUuid = agreementUuid;
     }
 }

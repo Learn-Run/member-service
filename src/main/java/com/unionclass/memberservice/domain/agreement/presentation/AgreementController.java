@@ -118,7 +118,8 @@ public class AgreementController {
                     - GET /api/v1/agreement/uuid/all
                 
                     [응답 데이터]
-                    - UUID (Long 타입) 만 리스트 형태로 응답됩니다.
+                    - UUID 가 내부적으로는 Long 타입으로 저장
+                    - UUID (String 타입) 의 리스트 형태로 응답됩니다.
                 
                     [처리 로직]
                     - agreement 테이블에서 deleted = false 인 항목만 필터링
