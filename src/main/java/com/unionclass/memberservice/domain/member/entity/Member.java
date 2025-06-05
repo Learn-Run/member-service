@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,23 +20,42 @@ public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Comment("회원 UUID")
+    @Column(nullable = false, unique = true, length = 36)
     private String memberUuid;
 
-    @Column(unique = true)
+    @Comment("로그인 아이디")
+    @Column(nullable = false, unique = true, length = 20)
     private String loginId;
+
+    @Comment("비밀번호")
+    @Column(nullable = false, length = 60)
     private String password;
+
+    @Comment("이메일")
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Comment("이름")
+    @Column(nullable = false)
     private String name;
+
+    @Comment("생년월일")
+    @Column(nullable = false)
     private LocalDate birthDate;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private Long gradeId;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+    @Column(nullable = false)
     private Boolean deletedStatus;
     @Column(columnDefinition = "DATETIME(0)")
     private LocalDateTime deletedAt;
