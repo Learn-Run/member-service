@@ -4,6 +4,7 @@ import com.unionclass.memberservice.common.entity.BaseEntity;
 import com.unionclass.memberservice.domain.member.enums.Gender;
 import com.unionclass.memberservice.domain.member.enums.UserRole;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
     @Id
