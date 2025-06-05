@@ -25,7 +25,9 @@ public enum ResponseMessage {
     SUCCESS_REGISTER_MEMBER_AGREEMENT("회원 약관동의 여부 등록에 성공하였습니다."),
     SUCCESS_UPDATE_MEMBER_AGREEMENT("회원 약관동의 여부 변경에 성공하였습니다."),
     SUCCESS_GET_MY_INFO("내 정보 조회에 성공하였습니다."),
-    SUCCESS_CREATE_GRADE("등급 생성에 성공하였습니다.");
+    SUCCESS_CREATE_GRADE("등급 생성에 성공하였습니다."),
+    SUCCESS_GET_ALL_GRADES("등급 전체 조회에 성공하였습니다.")
+    ;
 
     private final String message;
 }

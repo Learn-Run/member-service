@@ -3,11 +3,14 @@ package com.unionclass.memberservice.domain.grade.application;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
 import com.unionclass.memberservice.domain.grade.dto.in.CreateGradeReqDto;
+import com.unionclass.memberservice.domain.grade.dto.out.GetAllGradeResDto;
 import com.unionclass.memberservice.domain.grade.infrastructure.GradeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -27,5 +30,10 @@ public class GradeServiceImpl implements GradeService {
             log.warn("등급 생성 실패 - 등급명 : {}", createGradeReqDto.getGradeName());
             throw new BaseException(ErrorCode.FAILED_TO_CREATE_GRADE);
         }
+    }
+
+    @Override
+    public List<GetAllGradeResDto> getAllGrades() {
+        return gradeRepository.findAll().stream().map(GetAllGradeResDto::from).toList();
     }
 }

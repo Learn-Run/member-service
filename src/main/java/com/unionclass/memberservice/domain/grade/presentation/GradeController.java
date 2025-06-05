@@ -4,14 +4,15 @@ import com.unionclass.memberservice.common.response.BaseResponseEntity;
 import com.unionclass.memberservice.common.response.ResponseMessage;
 import com.unionclass.memberservice.domain.grade.application.GradeService;
 import com.unionclass.memberservice.domain.grade.dto.in.CreateGradeReqDto;
+import com.unionclass.memberservice.domain.grade.dto.out.GetAllGradeResDto;
 import com.unionclass.memberservice.domain.grade.vo.in.CreateGradeReqVo;
+import com.unionclass.memberservice.domain.grade.vo.out.GetAllGradeResVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -58,5 +59,25 @@ public class GradeController {
     ) {
         gradeService.createGrade(CreateGradeReqDto.from(createGradeReqVo));
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_CREATE_GRADE.getMessage());
+    }
+
+    @Operation(
+            summary = "등급 전체 조회",
+            description = """
+                    모든 등급 ID 와 등급명을 조회하는 API 입니다.
+        
+                    [응답 필드]
+                    - gradeId : (Long) 등급  ID
+                    - gradeName : (String) 등급명
+        
+                    [처리 로직]
+                    - 등급 테이블에서 모든 등급 엔티티를 조회하여 등급 ID 와 등급명을 리스트로 반환
+                    """
+    )
+    @GetMapping("/all")
+    public BaseResponseEntity<List<GetAllGradeResVo>> getAllGrades() {
+        return new BaseResponseEntity<>(
+                ResponseMessage.SUCCESS_GET_ALL_GRADES.getMessage(),
+                gradeService.getAllGrades().stream().map(GetAllGradeResDto::toVo).toList());
     }
 }
