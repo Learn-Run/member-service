@@ -11,7 +11,12 @@ import org.hibernate.annotations.Comment;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "member_agreement")
+@Table(
+        name = "member_agreement",
+        indexes = {
+                @Index(name = "idx_member_uuid", columnList = "memberUuid")
+        }
+)
 public class MemberAgreement extends BaseEntity {
 
     @Id
