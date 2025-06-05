@@ -77,7 +77,6 @@ public class SignUpReqDto {
                 .name(name)
                 .birthDate(birthDate)
                 .gender(gender)
-                .gradeId(gradeId)
                 .userRole(userRole)
                 .deletedStatus(false)
                 .build();
