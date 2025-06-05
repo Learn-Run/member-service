@@ -60,14 +60,14 @@ public class AuthServiceImpl implements AuthService {
             memberRepository.save(member);
             log.info("회원 저장 성공 - memberUuid: {}", member.getMemberUuid());
 
+            signUpReqDto.getRegisterMemberAgreementReqVoList().stream()
+                    .map(vo -> vo.toDto(member.getMemberUuid()))
+                    .forEach(memberAgreementService::registerMemberAgreement);
+
             profileServiceClient.registerNickname(
                     RegisterNicknameReqDto.of(member.getMemberUuid(), signUpReqDto.getNickname()));
             log.info("닉네임 등록 성공 - memberUuid: {}, nickname: {}",
                     member.getMemberUuid(), signUpReqDto.getNickname());
-
-            signUpReqDto.getRegisterMemberAgreementReqVoList().stream()
-                    .map(vo -> vo.toDto(member.getMemberUuid()))
-                    .forEach(memberAgreementService::registerMemberAgreement);
 
             log.info("회원가입 전체 완료 - memberUuid: {}", member.getMemberUuid());
             return SignUpResDto.from(member);
