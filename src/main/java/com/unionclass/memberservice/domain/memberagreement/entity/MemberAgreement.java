@@ -11,6 +11,7 @@ import org.hibernate.annotations.Comment;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "member_agreement")
 public class MemberAgreement extends BaseEntity {
 
     @Id
