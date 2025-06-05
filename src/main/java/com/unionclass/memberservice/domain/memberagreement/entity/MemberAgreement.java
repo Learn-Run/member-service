@@ -1,24 +1,32 @@
 package com.unionclass.memberservice.domain.memberagreement.entity;
 
 import com.unionclass.memberservice.common.entity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberAgreement extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Comment("회원 UUID")
+    @Column(nullable = false, length = 36)
     private String memberUuid;
+
+    @Comment("이용약관 UUID")
+    @Column(nullable = false)
     private Long agreementUuid;
+
+    @Comment("동의 여부")
+    @Column(nullable = false)
     private Boolean status;
 
     @Builder
