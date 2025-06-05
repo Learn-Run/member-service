@@ -4,6 +4,8 @@ import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
 import com.unionclass.memberservice.domain.grade.dto.in.CreateGradeReqDto;
 import com.unionclass.memberservice.domain.grade.dto.out.GetAllGradeResDto;
+import com.unionclass.memberservice.domain.grade.dto.out.GetGradeNameResDto;
+import com.unionclass.memberservice.domain.grade.entity.Grade;
 import com.unionclass.memberservice.domain.grade.infrastructure.GradeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,5 +37,11 @@ public class GradeServiceImpl implements GradeService {
     @Override
     public List<GetAllGradeResDto> getAllGrades() {
         return gradeRepository.findAll().stream().map(GetAllGradeResDto::from).toList();
+    }
+
+    @Override
+    public GetGradeNameResDto getGradeNameByGradeId(Long gradeId) {
+        return GetGradeNameResDto.from(gradeRepository.findById(gradeId)
+                .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_FIND_GRADE)));
     }
 }

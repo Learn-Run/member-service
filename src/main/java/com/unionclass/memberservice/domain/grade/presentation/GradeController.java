@@ -7,6 +7,7 @@ import com.unionclass.memberservice.domain.grade.dto.in.CreateGradeReqDto;
 import com.unionclass.memberservice.domain.grade.dto.out.GetAllGradeResDto;
 import com.unionclass.memberservice.domain.grade.vo.in.CreateGradeReqVo;
 import com.unionclass.memberservice.domain.grade.vo.out.GetAllGradeResVo;
+import com.unionclass.memberservice.domain.grade.vo.out.GetGradeNameResVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,9 @@ public class GradeController {
      * /api/v1/grade
      *
      * 1. 등급 생성
+     * 2. 등급 전체 조회
+     * 3. 등급명 조회
+     * 4. 등급 정보 변경
      */
 
     /**
@@ -79,5 +83,34 @@ public class GradeController {
         return new BaseResponseEntity<>(
                 ResponseMessage.SUCCESS_GET_ALL_GRADES.getMessage(),
                 gradeService.getAllGrades().stream().map(GetAllGradeResDto::toVo).toList());
+    }
+
+    @Operation(
+            summary = "등급명 조회",
+            description = """
+                    등급 ID를 기반으로 등급명을 조회하는 API 입니다.
+        
+                    [요청 경로]
+                    - gradeId : (Long) 등급 고유 식별자
+        
+                    [응답 필드]
+                    - gradeName : (String) 등급명 (SILVER, GOLD, PLATINUM, DIAMOND, MASTER)
+        
+                    [처리 로직]
+                    - gradeId를 기준으로 등급 엔티티를 조회
+                    - 존재하지 않으면 예외 발생
+        
+                    [예외 상황]
+                    - FAILED_TO_FIND_GRADE : 해당 ID 에 해당하는 등급을 찾을 수 없는 경우
+                    """
+
+    )
+    @GetMapping("/{gradeId}")
+    public BaseResponseEntity<GetGradeNameResVo> getGradeNameByGradeId(
+            @PathVariable Long gradeId
+    ) {
+        return new BaseResponseEntity<>(
+                ResponseMessage.SUCCESS_GET_GRADE_NAME.getMessage(),
+                gradeService.getGradeNameByGradeId(gradeId).toVo());
     }
 }
