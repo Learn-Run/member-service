@@ -68,7 +68,7 @@ public class SignUpReqDto {
                 .build();
     }
 
-    public Member toEntity(String inputPassword, Long gradeId, UserRole userRole) {
+    public Member toEntity(String inputPassword, UserRole userRole) {
         return Member.builder()
                 .memberUuid(UUID.randomUUID().toString())
                 .loginId(loginId)
