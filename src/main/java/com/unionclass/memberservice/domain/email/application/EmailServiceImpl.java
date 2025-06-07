@@ -13,6 +13,7 @@ import com.unionclass.memberservice.domain.member.dto.in.ResetPasswordReqDto;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -31,11 +32,16 @@ public class EmailServiceImpl implements EmailService {
     private final EmailTemplateProvider emailTemplateProvider;
     private final JavaMailSender mailSender;
     private final MemberService memberService;
+    private final RedissonClient redissonClient;
 
     private static final String EMAIL_VERIFY_KEY_PREFIX = "verify:email:";
+    private static final String TEMP_PASSWORD_LOCK_KEY_PREFIX = "lock:temp-password:";
     private static final long EMAIL_CODE_TTL = 5L;
     private static final TimeUnit EMAIL_CODE_TTL_UNIT = TimeUnit.MINUTES;
     private static final int PASSWORD_LENGTH = 8;
+
+    private static final long LOCK_WAIT_TIME = 3;        // 락 대기 시간 (초)
+    private static final long LOCK_LEASE_TIME = 10;      // 락 점유 유지 시간 (초)
 
     /**
      * /api/v1/email
@@ -101,34 +107,56 @@ public class EmailServiceImpl implements EmailService {
     }
 
     /**
-     * 3. 임시 비밀번호 발급
+     * 3. 임시 비밀번호 발급 (분산 락 사용)
      *
      * @param emailReqDto
      */
     @Transactional
     @Override
-    public void sendTemporaryPassword(EmailReqDto emailReqDto) {
+    public void sendTemporaryPasswordWithLock(EmailReqDto emailReqDto) {
 
-        String temporaryPassword = emailUtils.generateRandomPassword(PASSWORD_LENGTH);
+        String email = emailReqDto.getEmail();
+        String lockKey = TEMP_PASSWORD_LOCK_KEY_PREFIX + email;
+        RLock lock = redissonClient.getLock(lockKey);
 
-        memberService.resetPasswordWithTemporary(
-                ResetPasswordReqDto.of(emailReqDto.getEmail(), temporaryPassword));
+        boolean isLocked = false;
 
         try {
+            isLocked = lock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
+
+            if (!isLocked) {
+                log.warn("임시 비밀번호 발급 중복 요청 - 수신자: {}", email);
+                throw new BaseException(ErrorCode.DUPLICATE_TEMPORARY_PASSWORD_REQUEST);
+            }
+
+            String temporaryPassword = emailUtils.generateRandomPassword(PASSWORD_LENGTH);
+
+            memberService.resetPasswordWithTemporary(
+                    ResetPasswordReqDto.of(email, temporaryPassword));
+
+
             mailSender.send(
                     emailUtils.createMessage(
-                            emailReqDto.getEmail(),
+                            email,
                             EmailTitle.TEMPORARY_PASSWORD.getEmailTitle(),
                             emailTemplateProvider.getTemporaryPasswordByEmailTemplate(temporaryPassword)
                     )
             );
-            log.info("임시 비밀번호 발급 성공 - 수신자: {}", emailReqDto.getEmail());
+            log.info("임시 비밀번호 발급 성공 - 수신자: {}", email);
+
         } catch (UnsupportedEncodingException e) {
             log.error("인코딩 설정 오류: {}", e.getMessage(), e);
             throw new BaseException(ErrorCode.EMAIL_ENCODING_ERROR);
         } catch (MessagingException e) {
             log.error("메일 전송 실패: {}", e.getMessage(), e);
             throw new BaseException(ErrorCode.EMAIL_SEND_FAIL);
+        } catch (InterruptedException e) {
+            log.error("락 획득 실패 - 이메일: {}", email, e);
+            throw new BaseException(ErrorCode.LOCK_ACQUISITION_FAIL);
+        } finally {
+            if (isLocked && lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
         }
     }
 }

@@ -10,5 +10,5 @@ public interface EmailService {
 
     void sendVerificationCode(EmailReqDto emailReqDto) throws MessagingException, UnsupportedEncodingException;
     void verifyEmailCode(EmailCodeReqDto emailCodeReqDto);
-    void sendTemporaryPassword(EmailReqDto emailReqDto);
+    void sendTemporaryPasswordWithLock(EmailReqDto emailReqDto);
 }

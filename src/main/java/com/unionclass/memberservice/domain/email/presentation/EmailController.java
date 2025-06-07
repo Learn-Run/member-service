@@ -116,20 +116,29 @@ public class EmailController {
                     - email: 필수 입력, 이메일 형식
                 
                     [처리 로직]
-                    - 비밀번호는 현재 8자로 무작위 생성되며,
-                      반드시 대문자, 소문자, 숫자, 특수문자를 각각 1자 이상 포함합니다.
-                    - 해당 임시 비밀번호는 사용자의 비밀번호로 바로 저장됩니다.
+                    - 요청마다 이메일 기준으로 분산 락을 획득하여 동시 요청을 제어합니다.
+                    - 이미 동일 이메일로 처리 중인 요청이 있을 경우, 중복 요청으로 간주하고 차단됩니다.
+                    - 비밀번호는 길이 8자의 무작위 문자열로 생성되며, 대문자, 소문자, 숫자, 특수문자를 각각 1자 이상 포함합니다.
+                    - 생성된 임시 비밀번호는 사용자 계정의 새 비밀번호로 바로 저장됩니다.
+                    - 이후, 이메일로 임시 비밀번호가 전송됩니다.
                 
                     [예외 상황]
+                    - DUPLICATE_TEMPORARY_PASSWORD_REQUEST: 락을 획득하지 못한 중복 요청
                     - EMAIL_SEND_FAIL: 메일 서버 오류로 전송 실패
                     - EMAIL_ENCODING_ERROR: 메시지 인코딩 실패
+                    - LOCK_ACQUISITION_FAIL: 락 대기 중 인터럽트 등으로 인한 처리 실패
                     """
     )
-    @PostMapping("/send-password")
-    public BaseResponseEntity<Void> sendTemporaryPassword(
+    @PostMapping("/send-password/lock")
+    public BaseResponseEntity<Void> sendTemporaryPasswordWithLock(
             @Valid @RequestBody EmailReqVo emailReqVo
     ) {
-        emailService.sendTemporaryPassword(EmailReqDto.from(emailReqVo));
+        emailService.sendTemporaryPasswordWithLock(EmailReqDto.from(emailReqVo));
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_SEND_TEMPORARY_PASSWORD.getMessage());
+    }
+
+    @PostMapping("/send-password/deduplicate")
+    public Void sendTemporaryPasswordWithDeduplicator() {
+        return null;
     }
 }

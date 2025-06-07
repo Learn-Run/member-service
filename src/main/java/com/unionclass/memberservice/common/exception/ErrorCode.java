@@ -19,8 +19,9 @@ public enum ErrorCode {
      */
 
     /**
-     * 800 ~ 899 : internal server error
+     * 800 ~ 899 : internal server error / system, infra error
      */
+    LOCK_ACQUISITION_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, false, 800, "락 획득에 실패하였습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, 888, "서버에서 요청을 처리하지 못했습니다."),
 
     /**
@@ -59,6 +60,7 @@ public enum ErrorCode {
     MUST_AGREE_REQUIRED_AGREEMENT(HttpStatus.BAD_REQUEST, false, 1120, "필수 동의 항목에는 반드시 동의해야 합니다."),
     FAILED_TO_FIND_MEMBER_AGREEMENT(HttpStatus.BAD_REQUEST, false, 1121, "회원 약관동의 항목에 대한 정보 조회에 실패하였습니다."),
     CANNOT_UPDATE_REQUIRED_AGREEMENT(HttpStatus.BAD_REQUEST, false, 1122, "필수 동의 항목은 동의 상태를 변경할 수 없습니다."),
+    DUPLICATE_TEMPORARY_PASSWORD_REQUEST(HttpStatus.BAD_REQUEST, false, 1123, "이미 임시 비밀번호가 발급된 상태입니다. 일정 시간 후 다시 시도해주세요."),
     ;
 
     /**
