@@ -61,6 +61,7 @@ public enum ErrorCode {
     FAILED_TO_FIND_MEMBER_AGREEMENT(HttpStatus.BAD_REQUEST, false, 1121, "회원 약관동의 항목에 대한 정보 조회에 실패하였습니다."),
     CANNOT_UPDATE_REQUIRED_AGREEMENT(HttpStatus.BAD_REQUEST, false, 1122, "필수 동의 항목은 동의 상태를 변경할 수 없습니다."),
     DUPLICATE_TEMPORARY_PASSWORD_REQUEST(HttpStatus.BAD_REQUEST, false, 1123, "이미 임시 비밀번호가 발급된 상태입니다. 일정 시간 후 다시 시도해주세요."),
+    FAILED_TO_RESET_PASSWORD(HttpStatus.INTERNAL_SERVER_ERROR, false, 1124, "비밀번호 재설정에 실패하였습니다. 다시 시도 해주세요."),
     ;
 
     /**

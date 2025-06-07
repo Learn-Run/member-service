@@ -1,4 +1,4 @@
-package com.unionclass.memberservice.common.redis.redisUtils;
+package com.unionclass.memberservice.common.redis.util;
 
 import java.util.concurrent.TimeUnit;
 
