@@ -66,8 +66,8 @@ public class AgreementServiceImpl implements AgreementService {
      * @return
      */
     @Override
-    public GetAgreementResDto getAgreement(Long agreementUuid) {
-        return GetAgreementResDto.from(agreementRepository.findByUuid(agreementUuid)
+    public GetAgreementResDto getAgreement(String agreementUuid) {
+        return GetAgreementResDto.from(agreementRepository.findByUuid(Long.parseLong(agreementUuid))
                 .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_FIND_AGREEMENT)));
     }
 
@@ -115,8 +115,8 @@ public class AgreementServiceImpl implements AgreementService {
      */
     @Transactional
     @Override
-    public void deleteAgreement(Long agreementUuid) {
-        Agreement agreement = agreementRepository.findByUuid(agreementUuid)
+    public void deleteAgreement(String agreementUuid) {
+        Agreement agreement = agreementRepository.findByUuid(Long.parseLong(agreementUuid))
                 .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_FIND_AGREEMENT));
 
         agreementRepository.save(

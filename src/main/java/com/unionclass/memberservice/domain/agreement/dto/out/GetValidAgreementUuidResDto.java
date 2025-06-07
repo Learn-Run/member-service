@@ -25,7 +25,7 @@ public class GetValidAgreementUuidResDto {
 
     public GetValidAgreementUuidResVo toVo() {
         return GetValidAgreementUuidResVo.builder()
-                .agreementUuid(agreementUuid)
+                .agreementUuid(agreementUuid.toString())
                 .build();
     }
 }

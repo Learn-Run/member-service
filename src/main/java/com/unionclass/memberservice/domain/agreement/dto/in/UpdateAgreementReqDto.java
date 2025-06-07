@@ -22,9 +22,9 @@ public class UpdateAgreementReqDto {
         this.required = required;
     }
 
-    public static UpdateAgreementReqDto of(Long agreementUuid, UpdateAgreementReqVo updateAgreementReqVo) {
+    public static UpdateAgreementReqDto of(String agreementUuid, UpdateAgreementReqVo updateAgreementReqVo) {
         return UpdateAgreementReqDto.builder()
-                .agreementUuid(agreementUuid)
+                .agreementUuid(Long.parseLong(agreementUuid))
                 .agreementName(updateAgreementReqVo.getAgreementName())
                 .agreementContent(updateAgreementReqVo.getAgreementContent())
                 .required(updateAgreementReqVo.getRequired())

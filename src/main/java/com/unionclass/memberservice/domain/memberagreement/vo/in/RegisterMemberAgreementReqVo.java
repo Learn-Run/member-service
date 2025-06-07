@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 public class RegisterMemberAgreementReqVo {
 
     @NotNull(message = "agreementUuid 는 필수 입력값입니다.")
-    private Long agreementUuid;
+    private String agreementUuid;
 
     @NotNull(message = "약관 동의 여부은 필수 입력값입니다.")
     private Boolean agreementStatus;
 
     @Builder
-    public RegisterMemberAgreementReqVo(Long agreementUuid, Boolean agreementStatus) {
+    public RegisterMemberAgreementReqVo(String agreementUuid, Boolean agreementStatus) {
         this.agreementUuid = agreementUuid;
         this.agreementStatus = agreementStatus;
     }
@@ -25,7 +25,7 @@ public class RegisterMemberAgreementReqVo {
     public RegisterMemberAgreementReqDto toDto(String memberUuid) {
         return RegisterMemberAgreementReqDto.builder()
                 .memberUuid(memberUuid)
-                .agreementUuid(agreementUuid)
+                .agreementUuid(Long.parseLong(agreementUuid))
                 .agreementStatus(agreementStatus)
                 .build();
     }
