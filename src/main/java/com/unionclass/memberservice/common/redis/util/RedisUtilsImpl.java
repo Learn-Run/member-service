@@ -1,4 +1,4 @@
-package com.unionclass.memberservice.common.redis.redisUtils;
+package com.unionclass.memberservice.common.redis.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

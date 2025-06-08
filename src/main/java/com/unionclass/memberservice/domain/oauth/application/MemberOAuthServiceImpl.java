@@ -80,7 +80,7 @@ public class MemberOAuthServiceImpl implements  MemberOAuthService {
             throw new BaseException(ErrorCode.OAUTH_ACCOUNT_ALREADY_BOUND);
         }
 
-        String memberUuid = authService.signUpAndReturnMemberUuid(SignUpReqDto.from(signUpWithOAuthReqDto)).getMemberUuid();
+        String memberUuid = authService.signUp(SignUpReqDto.from(signUpWithOAuthReqDto)).getMemberUuid();
 
         memberOAuthRepository.save(signUpWithOAuthReqDto.toEntity(memberUuid));
         log.info("OAuth 계정 연동 완료 - provider: {}, accountId: {}, memberUuid: {}",

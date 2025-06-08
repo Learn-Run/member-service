@@ -32,7 +32,7 @@ public class EmailController {
      *
      * 1. 메일 인증코드 발송
      * 2. 메일 인증코드 검증
-     * 3. 임시 비밀번호 발급
+     * 3. 임시 비밀번호 발급 (시간 내 중복 요청 불가)
      */
 
     /**
@@ -102,34 +102,40 @@ public class EmailController {
     }
 
     /**
-     * 3. 임시 비밀번호 발급
+     * 3. 임시 비밀번호 발급 (시간 내 중복 요청 불가)
      *
      * @param emailReqVo
      * @return
      */
     @Operation(
-            summary = "임시 비밀번호 발급",
+            summary = "임시 비밀번호 발급 (시간(60초) 내 중복 요청 불가)",
             description = """
                     사용자의 이메일로 임시 비밀번호를 발급하여 전송합니다.
-
+                    해당 API 는 60초 내에 중복 요청이 불가능합니다.
+                    단, 서버 내부 장애로 인한 오류 발생 시 바로 재요청 가능합니다.
+                    
                     [요청 조건]
                     - email: 필수 입력, 이메일 형식
-                
+                    
                     [처리 로직]
-                    - 비밀번호는 현재 8자로 무작위 생성되며,
-                      반드시 대문자, 소문자, 숫자, 특수문자를 각각 1자 이상 포함합니다.
-                    - 해당 임시 비밀번호는 사용자의 비밀번호로 바로 저장됩니다.
-                
+                    - Redis Deduplicator 사용
+                    - Redis 키 `dedup:temp-password:{email}` 를 사용하여 중복 요청을 제어합니다.
+                    - TTL(예: 60초) 동안 동일 이메일로 다시 요청 시 중복으로 간주되고 차단됩니다.
+                    - 비밀번호는 길이 8자의 무작위 문자열로 생성되며, 대문자, 소문자, 숫자, 특수문자를 각각 1자 이상 포함합니다.
+                    - 생성된 임시 비밀번호는 사용자 계정의 새 비밀번호로 바로 저장됩니다.
+                    - 이후, 이메일로 임시 비밀번호가 전송됩니다.
+                    
                     [예외 상황]
+                    - DUPLICATE_TEMPORARY_PASSWORD_REQUEST: TTL 내 중복 요청 시 차단
                     - EMAIL_SEND_FAIL: 메일 서버 오류로 전송 실패
                     - EMAIL_ENCODING_ERROR: 메시지 인코딩 실패
                     """
     )
     @PostMapping("/send-password")
-    public BaseResponseEntity<Void> sendTemporaryPassword(
+    public BaseResponseEntity<Void> sendTemporaryPasswordWithDeduplicator(
             @Valid @RequestBody EmailReqVo emailReqVo
     ) {
-        emailService.sendTemporaryPassword(EmailReqDto.from(emailReqVo));
+        emailService.sendTemporaryPasswordWithDeduplicator(EmailReqDto.from(emailReqVo));
         return new BaseResponseEntity<>(ResponseMessage.SUCCESS_SEND_TEMPORARY_PASSWORD.getMessage());
     }
 }
