@@ -1,6 +1,7 @@
 package com.unionclass.memberservice.domain.auth.util;
 
 import com.unionclass.memberservice.common.security.JwtProvider;
+import com.unionclass.memberservice.domain.auth.entity.Auth;
 import com.unionclass.memberservice.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,13 +30,13 @@ public class AuthUtilsImpl implements AuthUtils {
     /**
      * 2. 인증
      *
-     * @param member
+     * @param auth
      * @param inputPassword
      * @return
      */
     @Override
-    public Authentication authenticate(Member member, String inputPassword) {
+    public Authentication authenticate(Auth auth, String inputPassword) {
         return authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(member.getMemberUuid(), inputPassword));
+                new UsernamePasswordAuthenticationToken(auth.getMemberUuid(), inputPassword));
     }
 }

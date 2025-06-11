@@ -1,12 +1,17 @@
 package com.unionclass.memberservice.domain.oauth.application;
 
-import com.unionclass.memberservice.domain.auth.application.AuthService;
-import com.unionclass.memberservice.domain.auth.dto.in.SignUpReqDto;
-import com.unionclass.memberservice.domain.auth.dto.out.SignInResDto;
-import com.unionclass.memberservice.domain.auth.util.AuthUtilsImpl;
+import com.unionclass.memberservice.client.profile.application.ProfileServiceClient;
+import com.unionclass.memberservice.client.profile.dto.in.RegisterNicknameReqDto;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
 import com.unionclass.memberservice.common.security.CustomUserDetailsService;
+import com.unionclass.memberservice.domain.auth.application.AuthService;
+import com.unionclass.memberservice.domain.auth.dto.out.SignInResDto;
+import com.unionclass.memberservice.domain.auth.util.AuthUtils;
+import com.unionclass.memberservice.domain.auth.util.AuthUtilsImpl;
+import com.unionclass.memberservice.domain.member.application.MemberService;
+import com.unionclass.memberservice.domain.member.dto.in.CreateMemberReqDto;
+import com.unionclass.memberservice.domain.memberagreement.application.MemberAgreementService;
 import com.unionclass.memberservice.domain.oauth.dto.in.ProviderReqDto;
 import com.unionclass.memberservice.domain.oauth.dto.in.SignUpWithOAuthReqDto;
 import com.unionclass.memberservice.domain.oauth.entity.MemberOAuth;
@@ -24,10 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberOAuthServiceImpl implements  MemberOAuthService {
 
-    private final MemberOAuthRepository memberOAuthRepository;
+    private final ProfileServiceClient profileServiceClient;
+    private final MemberAgreementService memberAgreementService;
+    private final MemberService memberService;
+    private final AuthUtils authUtils;
     private final CustomUserDetailsService customUserDetailsService;
-    private final AuthUtilsImpl authUtils;
-    private final AuthService authService;
+    private final MemberOAuthRepository memberOAuthRepository;
 
     /**
      * /api/v1/oauth
@@ -80,7 +87,17 @@ public class MemberOAuthServiceImpl implements  MemberOAuthService {
             throw new BaseException(ErrorCode.OAUTH_ACCOUNT_ALREADY_BOUND);
         }
 
-        String memberUuid = authService.signUp(SignUpReqDto.from(signUpWithOAuthReqDto)).getMemberUuid();
+        String memberUuid = memberService.createMember(
+                CreateMemberReqDto.from(signUpWithOAuthReqDto)).getMemberUuid();
+
+        signUpWithOAuthReqDto.getRegisterMemberAgreementReqVoList().stream()
+                .map(vo -> vo.toDto(memberUuid))
+                .forEach(memberAgreementService::registerMemberAgreement);
+
+        profileServiceClient.registerNickname(
+                RegisterNicknameReqDto.of(memberUuid, signUpWithOAuthReqDto.getNickname()));
+        log.info("닉네임 등록 성공 - memberUuid: {}, nickname: {}",
+                memberUuid, signUpWithOAuthReqDto.getNickname());
 
         memberOAuthRepository.save(signUpWithOAuthReqDto.toEntity(memberUuid));
         log.info("OAuth 계정 연동 완료 - provider: {}, accountId: {}, memberUuid: {}",

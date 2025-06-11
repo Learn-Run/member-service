@@ -2,7 +2,7 @@ package com.unionclass.memberservice.common.security;
 
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
-import com.unionclass.memberservice.domain.member.infrastructure.MemberRepository;
+import com.unionclass.memberservice.domain.auth.infrastructure.AuthRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final MemberRepository memberRepository;
+    private final AuthRepository authRepository;
 
     @Override
     public UserDetails loadUserByUsername(String memberUuid) throws UsernameNotFoundException {
         return new CustomUserDetails(
-                memberRepository.findByMemberUuid(memberUuid).orElseThrow(
-                        () -> new BaseException(ErrorCode.NO_EXIST_MEMBER)));
+                authRepository.findByMemberUuid(memberUuid).orElseThrow(
+                        () -> new BaseException(ErrorCode.AUTH_INFORMATION_NOT_FOUND)));
     }
 }
