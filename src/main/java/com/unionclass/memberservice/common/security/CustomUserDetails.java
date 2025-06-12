@@ -1,6 +1,7 @@
 package com.unionclass.memberservice.common.security;
 
 import com.unionclass.memberservice.domain.auth.entity.Auth;
+import com.unionclass.memberservice.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,12 +14,10 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
 
     private final String memberUuid;
-    private final String password;
 
     @Builder
-    public CustomUserDetails(Auth auth) {
-        this.memberUuid = auth.getMemberUuid();
-        this.password = auth.getPassword();
+    public CustomUserDetails(Member member) {
+        this.memberUuid = member.getMemberUuid();
     }
 
 
@@ -29,7 +28,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return this.password;
+        return null;
     }
 
     @Override

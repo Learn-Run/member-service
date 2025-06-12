@@ -56,19 +56,6 @@ public class SignUpWithCredentialsReqDto {
                 .build();
     }
 
-    public static SignUpWithCredentialsReqDto from(SignUpWithOAuthReqDto signUpWithOAuthReqDto) {
-        return SignUpWithCredentialsReqDto.builder()
-                .loginId(signUpWithOAuthReqDto.getLoginId())
-                .password(signUpWithOAuthReqDto.getPassword())
-                .email(signUpWithOAuthReqDto.getEmail())
-                .name(signUpWithOAuthReqDto.getName())
-                .birthDate(signUpWithOAuthReqDto.getBirthDate())
-                .gender(signUpWithOAuthReqDto.getGender())
-                .nickname(signUpWithOAuthReqDto.getNickname())
-                .registerMemberAgreementReqVoList(signUpWithOAuthReqDto.getRegisterMemberAgreementReqVoList())
-                .build();
-    }
-
     public Auth toEntity(String memberUuid, String inputPassword) {
         return Auth.builder()
                 .memberUuid(memberUuid)
