@@ -34,7 +34,6 @@ public class MemberOAuthServiceImpl implements  MemberOAuthService {
     private final MemberAgreementService memberAgreementService;
     private final MemberService memberService;
     private final AuthUtils authUtils;
-    private final CustomUserDetailsService customUserDetailsService;
     private final MemberOAuthRepository memberOAuthRepository;
 
     /**
