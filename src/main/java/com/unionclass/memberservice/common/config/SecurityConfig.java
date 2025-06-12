@@ -42,7 +42,8 @@ public class SecurityConfig {
                                         "/api/v1/email/**",
                                         "/api/v1/oauth/**",
                                         "/api/v1/agreement/**",
-                                        "/api/v1/grade/**"
+                                        "/api/v1/grade/**",
+                                        "/api/v1/member/email/check-duplicate"
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()

@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum UserRole {
+public enum MemberRole {
 
     ROLE_MEMBER("일반회원")
     ;
@@ -22,10 +22,10 @@ public enum UserRole {
     }
 
     @JsonCreator
-    public static UserRole fromString(String value) {
-        for (UserRole userRole : UserRole.values()) {
-            if (userRole.userRole.equals(value)) {
-                return userRole;
+    public static MemberRole fromString(String value) {
+        for (MemberRole memberRole : MemberRole.values()) {
+            if (memberRole.userRole.equals(value)) {
+                return memberRole;
             }
         }
         throw new BaseException(ErrorCode.INVALID_USER_ROLE);

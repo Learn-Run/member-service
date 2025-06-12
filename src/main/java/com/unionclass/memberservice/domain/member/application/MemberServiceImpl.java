@@ -2,14 +2,16 @@ package com.unionclass.memberservice.domain.member.application;
 
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
-import com.unionclass.memberservice.domain.member.dto.in.ChangePasswordReqDto;
-import com.unionclass.memberservice.domain.member.dto.in.ResetPasswordReqDto;
+import com.unionclass.memberservice.domain.email.dto.in.EmailReqDto;
+import com.unionclass.memberservice.domain.member.dto.in.CreateMemberReqDto;
+import com.unionclass.memberservice.domain.member.dto.out.CreateMemberResDto;
+import com.unionclass.memberservice.domain.member.dto.out.GetMemberUuidDto;
 import com.unionclass.memberservice.domain.member.dto.out.GetMyInfoResDto;
 import com.unionclass.memberservice.domain.member.entity.Member;
+import com.unionclass.memberservice.domain.member.enums.MemberRole;
 import com.unionclass.memberservice.domain.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,84 +22,54 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
+
+    private static final MemberRole DEFAULT_MEMBER_ROLE = MemberRole.ROLE_MEMBER;
 
     /**
      * /api/v1/member
      *
-     * 1. 비밀번호 변경
-     * 2. 임시 비밀번호 설정
-     * 3. 닉네임 변경
-     * 4. 내 정보 조회
+     * 1. 이메일 중복 검사
+     * 2. 회원 정보 저장
+     * 3. 내 정보 조회
      */
 
     /**
-     * 1. 비밀번호 변경
+     * 1. 이메일 중복 검사
      *
-     * @param changePasswordReqDto
+     * @param emailReqDto
      */
-    @Transactional
     @Override
-    public void changePassword(ChangePasswordReqDto changePasswordReqDto) {
-
-        Member member = memberRepository.findByMemberUuid(changePasswordReqDto.getMemberUuid())
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_EXIST_MEMBER));
-
-        if (!passwordEncoder.matches(changePasswordReqDto.getCurrentPassword(), member.getPassword())) {
-            log.warn("비밀번호 불일치 - UUID: {}", changePasswordReqDto.getMemberUuid());
-            throw new BaseException(ErrorCode.INVALID_CURRENT_PASSWORD);
+    public void checkEmailDuplicate(EmailReqDto emailReqDto) {
+        if (memberRepository.findByEmail(emailReqDto.getEmail()).isPresent()) {
+            log.warn("이메일 중복됨 - 입력 이메일: {}", emailReqDto.getEmail());
+            throw new BaseException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
-
-        memberRepository.save(
-                Member.builder()
-                        .id(member.getId())
-                        .memberUuid(member.getMemberUuid())
-                        .loginId(member.getLoginId())
-                        .password(passwordEncoder.encode(changePasswordReqDto.getNewPassword()))
-                        .email(member.getEmail())
-                        .name(member.getName())
-                        .birthDate(member.getBirthDate())
-                        .gender(member.getGender())
-                        .userRole(member.getUserRole())
-                        .deletedStatus(member.getDeletedStatus())
-                        .deletedAt(member.getDeletedAt())
-                        .build()
-        );
-        log.info("비밀번호 변경 완료 - Member UUID: {}", changePasswordReqDto.getMemberUuid());
+        log.info("이메일 중복 없음 - 입력 이메일: {}", emailReqDto.getEmail());
     }
 
     /**
-     * 2. 임시 비밀번호 설정
+     * 2. 회원 정보 저장
      *
-     * @param resetPasswordReqDto
+     * @param createMemberReqDto
      */
     @Transactional
     @Override
-    public void resetPasswordWithTemporary(ResetPasswordReqDto resetPasswordReqDto) {
+    public CreateMemberResDto createMember(CreateMemberReqDto createMemberReqDto) {
+        try {
+            Member member = createMemberReqDto.toEntity(DEFAULT_MEMBER_ROLE);
+            memberRepository.save(member);
+            log.info("회원 정보 저장 성공 - email: {}, memberUuid: {}",
+                    createMemberReqDto.getEmail(), member.getMemberUuid());
 
-        Member member = memberRepository.findByEmail(resetPasswordReqDto.getEmail())
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_EXIST_MEMBER));
-
-        memberRepository.save(
-                Member.builder()
-                        .id(member.getId())
-                        .memberUuid(member.getMemberUuid())
-                        .loginId(member.getLoginId())
-                        .password(passwordEncoder.encode(resetPasswordReqDto.getTemporaryPassword()))
-                        .email(member.getEmail())
-                        .name(member.getName())
-                        .birthDate(member.getBirthDate())
-                        .gender(member.getGender())
-                        .userRole(member.getUserRole())
-                        .deletedStatus(member.getDeletedStatus())
-                        .deletedAt(member.getDeletedAt())
-                        .build()
-        );
-        log.info("임시 비밀번호로 비밀번호 재설정 완료 - 이메일: {}", resetPasswordReqDto.getEmail());
+            return CreateMemberResDto.from(member);
+        } catch (Exception e) {
+            log.warn("회원 정보 저장 중 알 수 없는 오류 발생 - email: {}", createMemberReqDto.getEmail());
+            throw new BaseException(ErrorCode.FAILED_TO_SAVE_MEMBER);
+        }
     }
 
     /**
-     * 4. 내 정보 조회
+     * 3. 내 정보 조회
      *
      * @param memberUuid
      * @return
@@ -105,6 +77,12 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public GetMyInfoResDto getMyInfo(String memberUuid) {
         return GetMyInfoResDto.from(memberRepository.findByMemberUuid(memberUuid)
+                .orElseThrow(() -> new BaseException(ErrorCode.NO_EXIST_MEMBER)));
+    }
+
+    @Override
+    public GetMemberUuidDto getMemberUuidByEmail(String email) {
+        return GetMemberUuidDto.from(memberRepository.findByEmail(email)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_EXIST_MEMBER)));
     }
 }

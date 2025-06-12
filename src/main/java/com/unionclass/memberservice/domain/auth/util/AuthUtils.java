@@ -1,5 +1,6 @@
 package com.unionclass.memberservice.domain.auth.util;
 
+import com.unionclass.memberservice.domain.auth.entity.Auth;
 import com.unionclass.memberservice.domain.member.entity.Member;
 import org.springframework.security.core.Authentication;
 
@@ -13,5 +14,5 @@ public interface AuthUtils {
      */
 
     String createToken(Authentication authentication);
-    Authentication authenticate(Member member, String inputPassword);
+    Authentication authenticate(Auth auth, String inputPassword);
 }
