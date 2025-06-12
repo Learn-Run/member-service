@@ -5,6 +5,7 @@ import com.unionclass.memberservice.client.profile.dto.in.RegisterNicknameReqDto
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
 import com.unionclass.memberservice.common.security.CustomUserDetailsService;
+import com.unionclass.memberservice.common.security.OAuthUserDetails;
 import com.unionclass.memberservice.domain.auth.application.AuthService;
 import com.unionclass.memberservice.domain.auth.dto.out.SignInResDto;
 import com.unionclass.memberservice.domain.auth.util.AuthUtils;
@@ -57,8 +58,8 @@ public class MemberOAuthServiceImpl implements  MemberOAuthService {
                 providerReqDto.getProvider(),
                 providerReqDto.getProviderAccountId()
         ).orElseThrow(() -> new BaseException(ErrorCode.NO_EXIST_OAUTH_MEMBER));
-        
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(memberOAuth.getMemberUuid());
+
+        UserDetails userDetails = new OAuthUserDetails(memberOAuth.getMemberUuid());
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities()
         );

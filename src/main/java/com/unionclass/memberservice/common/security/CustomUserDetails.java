@@ -14,10 +14,12 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
 
     private final String memberUuid;
+    private final String password;
 
     @Builder
-    public CustomUserDetails(Member member) {
-        this.memberUuid = member.getMemberUuid();
+    public CustomUserDetails(Auth auth) {
+        this.memberUuid = auth.getMemberUuid();
+        this.password = auth.getPassword();
     }
 
 
@@ -28,7 +30,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return this.password;
     }
 
     @Override

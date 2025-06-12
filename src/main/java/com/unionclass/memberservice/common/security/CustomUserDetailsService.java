@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final MemberRepository memberRepository;
+    private final AuthRepository authRepository;
 
     @Override
     public UserDetails loadUserByUsername(String memberUuid) throws UsernameNotFoundException {
         return new CustomUserDetails(
-                memberRepository.findByMemberUuid(memberUuid).orElseThrow(
+                authRepository.findByMemberUuid(memberUuid).orElseThrow(
                         () -> new BaseException(ErrorCode.AUTH_INFORMATION_NOT_FOUND)));
     }
 }
