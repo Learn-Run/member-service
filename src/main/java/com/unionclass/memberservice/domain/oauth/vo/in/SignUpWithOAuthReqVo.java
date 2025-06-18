@@ -12,20 +12,6 @@ import java.util.List;
 @Getter
 public class SignUpWithOAuthReqVo {
 
-    @Size(min = 4, message = "아이디는 4글자 이상으로 입력해주세요.")
-    @Size(max = 20, message = "아이디는 20글자 이하로 입력해주세요.")
-    @NotBlank(message = "아이디를 입력해주세요.")
-    private String loginId;
-
-    @Size(min = 8, message = "비밀번호는 8글자 이상으로 입력해주세요.")
-    @Size(max = 20, message = "비밀번호은 20글자 이하로 입력해주세요.")
-    @Pattern(
-            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*]).*$",
-            message = "대문자를 포함한 영문, 숫자, 특수문자를 최소 1글자 이상 포함하여 작성해주세요.)"
-    )
-    @NotBlank(message = "비밀번호를 입력해주세요.")
-    private String password;
-
     @Email(message = "올바른 이메일 형식으로 입력해주세요.")
     @NotBlank(message = "이메일을 입력해주세요.")
     private String email;
@@ -43,7 +29,7 @@ public class SignUpWithOAuthReqVo {
     @NotBlank(message = "닉네임을 입력해주세요.")
     private String nickname;
 
-    private List<RegisterMemberAgreementReqVo> registerMemberAgreementReqVoList;
+    private List<RegisterMemberAgreementReqVo> agreementCheckList;
 
     @NotNull(message = "소셜 로그인 제공자를 입력해주세요. (KAKAO)")
     private Provider provider;

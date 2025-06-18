@@ -1,5 +1,6 @@
 package com.unionclass.memberservice.domain.auth.dto.out;
 
+import com.unionclass.memberservice.domain.auth.entity.Auth;
 import com.unionclass.memberservice.domain.auth.vo.out.SignInResVo;
 import com.unionclass.memberservice.domain.member.entity.Member;
 import lombok.Builder;
@@ -19,9 +20,9 @@ public class SignInResDto {
         this.accessToken = accessToken;
     }
 
-    public static SignInResDto of(Member member, String accessToken) {
+    public static SignInResDto of(Auth auth, String accessToken) {
         return SignInResDto.builder()
-                .memberUuid(member.getMemberUuid())
+                .memberUuid(auth.getMemberUuid())
                 .accessToken(accessToken)
                 .build();
     }

@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class ProviderReqVo {
 
-    @NotNull(message = "소셜 로그인 제공자를 입력해주세요. (Kakao)")
+    @NotNull(message = "소셜 로그인 제공자를 입력해주세요. (KAKAO)")
     private Provider provider;
 
     @NotBlank(message = "소셜 계정 식별자를 입력해주세요.")

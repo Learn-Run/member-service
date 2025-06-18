@@ -1,14 +1,12 @@
 package com.unionclass.memberservice.common.security;
 
+import com.unionclass.memberservice.domain.auth.entity.Auth;
 import com.unionclass.memberservice.domain.member.entity.Member;
-import com.unionclass.memberservice.domain.member.enums.UserRole;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,21 +15,17 @@ public class CustomUserDetails implements UserDetails {
 
     private final String memberUuid;
     private final String password;
-    private final UserRole userRole;
 
     @Builder
-    public CustomUserDetails(Member member) {
-        this.memberUuid = member.getMemberUuid();
-        this.password = member.getPassword();
-        this.userRole = member.getUserRole();
+    public CustomUserDetails(Auth auth) {
+        this.memberUuid = auth.getMemberUuid();
+        this.password = auth.getPassword();
     }
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + userRole.name()));
-        return authorities;
+        return List.of();
     }
 
     @Override

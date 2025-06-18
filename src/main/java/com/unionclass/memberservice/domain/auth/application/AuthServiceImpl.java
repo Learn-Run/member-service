@@ -6,14 +6,15 @@ import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
 import com.unionclass.memberservice.domain.auth.dto.in.GetLoginIdReqDto;
 import com.unionclass.memberservice.domain.auth.dto.in.SignInReqDto;
-import com.unionclass.memberservice.domain.auth.dto.in.SignUpReqDto;
+import com.unionclass.memberservice.domain.auth.dto.in.SignUpWithCredentialsReqDto;
 import com.unionclass.memberservice.domain.auth.dto.out.SignInResDto;
-import com.unionclass.memberservice.domain.auth.dto.out.SignUpResDto;
+import com.unionclass.memberservice.domain.auth.entity.Auth;
+import com.unionclass.memberservice.domain.auth.infrastructure.AuthRepository;
 import com.unionclass.memberservice.domain.auth.util.AuthUtils;
-import com.unionclass.memberservice.domain.email.dto.in.EmailReqDto;
-import com.unionclass.memberservice.domain.member.entity.Member;
-import com.unionclass.memberservice.domain.member.enums.UserRole;
-import com.unionclass.memberservice.domain.member.infrastructure.MemberRepository;
+import com.unionclass.memberservice.domain.member.application.MemberService;
+import com.unionclass.memberservice.domain.member.dto.in.ChangePasswordReqDto;
+import com.unionclass.memberservice.domain.member.dto.in.CreateMemberReqDto;
+import com.unionclass.memberservice.domain.member.dto.in.ResetPasswordReqDto;
 import com.unionclass.memberservice.domain.memberagreement.application.MemberAgreementService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,52 +28,42 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class AuthServiceImpl implements AuthService {
 
-    private final MemberRepository memberRepository;
-    private final AuthUtils authUtils;
     private final ProfileServiceClient profileServiceClient;
     private final MemberAgreementService memberAgreementService;
+    private final MemberService memberService;
+    private final AuthUtils authUtils;
     private final PasswordEncoder passwordEncoder;
-
-    private static final UserRole DEFAULT_USER_ROLE = UserRole.ROLE_MEMBER;
-
-    /**
-     * /api/v1/auth
-     *
-     * 1. 회원가입
-     * 2. 로그인
-     * 3. 이메일 중복 검사
-     * 4. 아이디 중복 검사
-     * 5. 회원가입 & MemberUuid 반환
-     */
+    private final AuthRepository authRepository;
 
     /**
-     * 1. 회원가입
+     * 1. 회원가입 (With Credentials)
      *
-     * @param signUpReqDto
+     * @param signUpWithCredentialsReqDto
      * @return
      */
     @Transactional
     @Override
-    public SignUpResDto signUp(SignUpReqDto signUpReqDto) {
+    public void signUpWithCredentials(SignUpWithCredentialsReqDto signUpWithCredentialsReqDto) {
         try {
-            Member member = signUpReqDto.toEntity(passwordEncoder.encode(signUpReqDto.getPassword()), DEFAULT_USER_ROLE);
+            String memberUuid = memberService.createMember(
+                    CreateMemberReqDto.from(signUpWithCredentialsReqDto)).getMemberUuid();
 
-            memberRepository.save(member);
-            log.info("회원 저장 성공 - memberUuid: {}", member.getMemberUuid());
+            authRepository.save(signUpWithCredentialsReqDto.toEntity(
+                    memberUuid, passwordEncoder.encode(signUpWithCredentialsReqDto.getPassword())));
+            log.info("계정 정보 저장 성공 - memberUuid: {}", memberUuid);
 
-            signUpReqDto.getRegisterMemberAgreementReqVoList().stream()
-                    .map(vo -> vo.toDto(member.getMemberUuid()))
+            signUpWithCredentialsReqDto.getRegisterMemberAgreementReqVoList().stream()
+                    .map(vo -> vo.toDto(memberUuid))
                     .forEach(memberAgreementService::registerMemberAgreement);
 
             profileServiceClient.registerNickname(
-                    RegisterNicknameReqDto.of(member.getMemberUuid(), signUpReqDto.getNickname()));
+                    RegisterNicknameReqDto.of(memberUuid, signUpWithCredentialsReqDto.getNickname()));
             log.info("닉네임 등록 성공 - memberUuid: {}, nickname: {}",
-                    member.getMemberUuid(), signUpReqDto.getNickname());
+                    memberUuid, signUpWithCredentialsReqDto.getNickname());
 
-            log.info("회원가입 전체 완료 - memberUuid: {}", member.getMemberUuid());
-            return SignUpResDto.from(member);
+            log.info("회원가입 전체 완료 - memberUuid: {}", memberUuid);
         } catch (Exception e) {
-            log.error("회원가입 실패 - 입력 데이터: {}, 에러 메시지: {}", signUpReqDto, e.getMessage(), e);
+            log.error("회원가입 실패 - 입력 데이터: {}, 에러 메시지: {}", signUpWithCredentialsReqDto, e.getMessage(), e);
             throw new BaseException(ErrorCode.FAILED_TO_SIGN_UP);
         }
     }
@@ -87,41 +78,79 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public SignInResDto signIn(SignInReqDto signInReqDto) {
         try {
-            Member member = memberRepository.findByLoginId(signInReqDto.getLoginId())
+            Auth auth = authRepository.findByLoginId(signInReqDto.getLoginId())
                     .orElseThrow(() -> new BaseException(ErrorCode.FAILED_TO_SIGN_IN));
             return SignInResDto.of(
-                    member,
-                    authUtils.createToken(authUtils.authenticate(member, signInReqDto.getPassword())).substring(7));
+                    auth,
+                    authUtils.createToken(authUtils.authenticate(auth, signInReqDto.getPassword())).substring(7));
         } catch (Exception e) {
             throw new BaseException(ErrorCode.FAILED_TO_SIGN_IN);
         }
     }
 
     /**
-     * 3. 이메일 중복 검사
-     *
-     * @param emailReqDto
-     */
-    @Override
-    public void checkEmailDuplicate(EmailReqDto emailReqDto) {
-        if (memberRepository.findByEmail(emailReqDto.getEmail()).isPresent()) {
-            log.warn("이메일 중복됨 - 입력 이메일: {}", emailReqDto.getEmail());
-            throw new BaseException(ErrorCode.EMAIL_ALREADY_EXISTS);
-        }
-        log.info("이메일 중복 없음 - 입력 이메일: {}", emailReqDto.getEmail());
-    }
-
-    /**
-     * 4. 아이디 중복 검사
+     * 3. 아이디 중복 검사
      *
      * @param getLoginIdReqDto
      */
     @Override
     public void checkLoginIdDuplicate(GetLoginIdReqDto getLoginIdReqDto) {
-        if (memberRepository.findByLoginId(getLoginIdReqDto.getLoginId()).isPresent()) {
+        if (authRepository.findByLoginId(getLoginIdReqDto.getLoginId()).isPresent()) {
             log.warn("아이디 중복됨 - 입력 아이디: {}", getLoginIdReqDto.getLoginId());
             throw new BaseException(ErrorCode.LOGIN_ID_ALREADY_EXISTS);
         }
         log.info("아이디 중복 없음 - 입력 아이디: {}", getLoginIdReqDto.getLoginId());
+    }
+
+    /**
+     * 4. 비밀번호 변경
+     *
+     * @param changePasswordReqDto
+     */
+    @Transactional
+    @Override
+    public void changePassword(ChangePasswordReqDto changePasswordReqDto) {
+
+        Auth auth = authRepository.findByMemberUuid(changePasswordReqDto.getMemberUuid())
+                .orElseThrow(() -> new BaseException(ErrorCode.AUTH_INFORMATION_NOT_FOUND));
+
+        if (!passwordEncoder.matches(changePasswordReqDto.getCurrentPassword(), auth.getPassword())) {
+            log.warn("비밀번호 불일치 - UUID: {}", changePasswordReqDto.getMemberUuid());
+            throw new BaseException(ErrorCode.INVALID_CURRENT_PASSWORD);
+        }
+
+        authRepository.save(
+                Auth.builder()
+                        .id(auth.getId())
+                        .memberUuid(auth.getMemberUuid())
+                        .loginId(auth.getLoginId())
+                        .password(passwordEncoder.encode(changePasswordReqDto.getNewPassword()))
+                        .build()
+        );
+        log.info("비밀번호 변경 완료 - Member UUID: {}", changePasswordReqDto.getMemberUuid());
+    }
+
+    /**
+     * 5. 임시 비밀번호 설정
+     *
+     * @param resetPasswordReqDto
+     */
+    @Transactional
+    @Override
+    public void resetPasswordWithTemporary(ResetPasswordReqDto resetPasswordReqDto) {
+
+        Auth auth = authRepository.findByMemberUuid(
+                memberService.getMemberUuidByEmail(resetPasswordReqDto.getEmail()).getMemberUuid())
+                .orElseThrow(() -> new BaseException(ErrorCode.AUTH_INFORMATION_NOT_FOUND));
+
+        authRepository.save(
+                Auth.builder()
+                        .id(auth.getId())
+                        .memberUuid(auth.getMemberUuid())
+                        .loginId(auth.getLoginId())
+                        .password(passwordEncoder.encode(resetPasswordReqDto.getTemporaryPassword()))
+                        .build()
+        );
+        log.info("임시 비밀번호로 비밀번호 재설정 완료 - 이메일: {}", resetPasswordReqDto.getEmail());
     }
 }

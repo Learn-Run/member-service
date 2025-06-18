@@ -1,9 +1,10 @@
 package com.unionclass.memberservice.domain.auth.dto.in;
 
+import com.unionclass.memberservice.domain.auth.entity.Auth;
 import com.unionclass.memberservice.domain.auth.vo.in.SignUpReqVo;
 import com.unionclass.memberservice.domain.member.entity.Member;
 import com.unionclass.memberservice.domain.member.enums.Gender;
-import com.unionclass.memberservice.domain.member.enums.UserRole;
+import com.unionclass.memberservice.domain.member.enums.MemberRole;
 import com.unionclass.memberservice.domain.memberagreement.vo.in.RegisterMemberAgreementReqVo;
 import com.unionclass.memberservice.domain.oauth.dto.in.SignUpWithOAuthReqDto;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
-public class SignUpReqDto {
+public class SignUpWithCredentialsReqDto {
 
     private String loginId;
     private String password;
@@ -28,9 +29,9 @@ public class SignUpReqDto {
     private List<RegisterMemberAgreementReqVo> registerMemberAgreementReqVoList;
 
     @Builder
-    public SignUpReqDto(String loginId, String password, String email, String name,
-                        LocalDate birthDate, Gender gender, String nickname,
-                        List<RegisterMemberAgreementReqVo> registerMemberAgreementReqVoList
+    public SignUpWithCredentialsReqDto(String loginId, String password, String email, String name,
+                                       LocalDate birthDate, Gender gender, String nickname,
+                                       List<RegisterMemberAgreementReqVo> registerMemberAgreementReqVoList
     ) {
         this.loginId = loginId;
         this.password = password;
@@ -42,8 +43,8 @@ public class SignUpReqDto {
         this.registerMemberAgreementReqVoList = registerMemberAgreementReqVoList;
     }
 
-    public static SignUpReqDto from(SignUpReqVo signUpReqVo) {
-        return SignUpReqDto.builder()
+    public static SignUpWithCredentialsReqDto from(SignUpReqVo signUpReqVo) {
+        return SignUpWithCredentialsReqDto.builder()
                 .loginId(signUpReqVo.getLoginId())
                 .password(signUpReqVo.getPassword())
                 .email(signUpReqVo.getEmail())
@@ -55,30 +56,11 @@ public class SignUpReqDto {
                 .build();
     }
 
-    public static SignUpReqDto from(SignUpWithOAuthReqDto signUpWithOAuthReqDto) {
-        return SignUpReqDto.builder()
-                .loginId(signUpWithOAuthReqDto.getLoginId())
-                .password(signUpWithOAuthReqDto.getPassword())
-                .email(signUpWithOAuthReqDto.getEmail())
-                .name(signUpWithOAuthReqDto.getName())
-                .birthDate(signUpWithOAuthReqDto.getBirthDate())
-                .gender(signUpWithOAuthReqDto.getGender())
-                .nickname(signUpWithOAuthReqDto.getNickname())
-                .registerMemberAgreementReqVoList(signUpWithOAuthReqDto.getRegisterMemberAgreementReqVoList())
-                .build();
-    }
-
-    public Member toEntity(String inputPassword, UserRole userRole) {
-        return Member.builder()
-                .memberUuid(UUID.randomUUID().toString())
+    public Auth toEntity(String memberUuid, String inputPassword) {
+        return Auth.builder()
+                .memberUuid(memberUuid)
                 .loginId(loginId)
                 .password(inputPassword)
-                .email(email)
-                .name(name)
-                .birthDate(birthDate)
-                .gender(gender)
-                .userRole(userRole)
-                .deletedStatus(false)
                 .build();
     }
 }

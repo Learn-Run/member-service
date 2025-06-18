@@ -16,8 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 public class SignUpWithOAuthReqDto {
 
-    private String loginId;
-    private String password;
     private String email;
     private String name;
     private LocalDate birthDate;
@@ -29,12 +27,9 @@ public class SignUpWithOAuthReqDto {
 
     @Builder
     public SignUpWithOAuthReqDto(
-            String loginId, String password, String email, String name, LocalDate birthDate,
-            Gender gender, String nickname, List<RegisterMemberAgreementReqVo> registerMemberAgreementReqVoList,
-            Provider provider, String providerAccountId
+            String email, String name, LocalDate birthDate, Gender gender, String nickname,
+            List<RegisterMemberAgreementReqVo> registerMemberAgreementReqVoList, Provider provider, String providerAccountId
     ) {
-        this.loginId = loginId;
-        this.password = password;
         this.email = email;
         this.name = name;
         this.birthDate = birthDate;
@@ -47,14 +42,12 @@ public class SignUpWithOAuthReqDto {
 
     public static SignUpWithOAuthReqDto from(SignUpWithOAuthReqVo signUpWithOAuthReqVo) {
         return SignUpWithOAuthReqDto.builder()
-                .loginId(signUpWithOAuthReqVo.getLoginId())
-                .password(signUpWithOAuthReqVo.getPassword())
                 .email(signUpWithOAuthReqVo.getEmail())
                 .name(signUpWithOAuthReqVo.getName())
                 .birthDate(signUpWithOAuthReqVo.getBirthDate())
                 .gender(signUpWithOAuthReqVo.getGender())
                 .nickname(signUpWithOAuthReqVo.getNickname())
-                .registerMemberAgreementReqVoList(signUpWithOAuthReqVo.getRegisterMemberAgreementReqVoList())
+                .registerMemberAgreementReqVoList(signUpWithOAuthReqVo.getAgreementCheckList())
                 .provider(signUpWithOAuthReqVo.getProvider())
                 .providerAccountId(signUpWithOAuthReqVo.getProviderAccountId())
                 .build();

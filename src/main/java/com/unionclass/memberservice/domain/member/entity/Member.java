@@ -2,7 +2,7 @@ package com.unionclass.memberservice.domain.member.entity;
 
 import com.unionclass.memberservice.common.entity.BaseEntity;
 import com.unionclass.memberservice.domain.member.enums.Gender;
-import com.unionclass.memberservice.domain.member.enums.UserRole;
+import com.unionclass.memberservice.domain.member.enums.MemberRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,14 +26,6 @@ public class Member extends BaseEntity {
     @Column(nullable = false, unique = true, length = 36)
     private String memberUuid;
 
-    @Comment("로그인 아이디")
-    @Column(nullable = false, unique = true, length = 20)
-    private String loginId;
-
-    @Comment("비밀번호")
-    @Column(nullable = false, length = 60)
-    private String password;
-
     @Comment("이메일")
     @Column(nullable = false, unique = true)
     private String email;
@@ -52,29 +44,26 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserRole userRole;
+    private MemberRole memberRole;
 
     @Column(nullable = false)
-    private Boolean deletedStatus;
+    private boolean deleted;
     @Column(columnDefinition = "DATETIME(0)")
     private LocalDateTime deletedAt;
 
     @Builder
     public Member(
-            Long id, String memberUuid, String loginId, String password,
-            String email, String name, LocalDate birthDate, Gender gender,
-            UserRole userRole, Boolean deletedStatus, LocalDateTime deletedAt
+            Long id, String memberUuid, String email, String name, LocalDate birthDate,
+            Gender gender, MemberRole memberRole, boolean deleted, LocalDateTime deletedAt
     ) {
         this.id = id;
         this.memberUuid = memberUuid;
-        this.loginId = loginId;
-        this.password = password;
         this.email = email;
         this.name = name;
         this.birthDate = birthDate;
         this.gender = gender;
-        this.userRole = userRole;
-        this.deletedStatus = deletedStatus;
+        this.memberRole = memberRole;
+        this.deleted = deleted;
         this.deletedAt = deletedAt;
     }
 }

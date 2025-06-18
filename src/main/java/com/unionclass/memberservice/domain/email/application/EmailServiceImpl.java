@@ -4,6 +4,7 @@ import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
 import com.unionclass.memberservice.common.redis.deduplicator.RedisDeduplicator;
 import com.unionclass.memberservice.common.redis.util.RedisUtils;
+import com.unionclass.memberservice.domain.auth.application.AuthService;
 import com.unionclass.memberservice.domain.email.dto.in.EmailCodeReqDto;
 import com.unionclass.memberservice.domain.email.dto.in.EmailReqDto;
 import com.unionclass.memberservice.domain.email.enums.EmailTitle;
@@ -31,7 +32,7 @@ public class EmailServiceImpl implements EmailService {
     private final EmailUtils emailUtils;
     private final EmailTemplateProvider emailTemplateProvider;
     private final JavaMailSender mailSender;
-    private final MemberService memberService;
+    private final AuthService authService;
     private final RedisDeduplicator redisDeduplicator;
 
     private static final String EMAIL_VERIFY_KEY_PREFIX = "verify:email:";
@@ -124,7 +125,7 @@ public class EmailServiceImpl implements EmailService {
         boolean isCompleted = false;
 
         try {
-            memberService.resetPasswordWithTemporary(
+            authService.resetPasswordWithTemporary(
                     ResetPasswordReqDto.of(email, tempPassword));
 
             mailSender.send(

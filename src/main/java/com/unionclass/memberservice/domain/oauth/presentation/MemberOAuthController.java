@@ -78,7 +78,7 @@ public class MemberOAuthController {
                     [요청 조건]
                     - provider: (필수) 소셜 플랫폼 종류 (KAKAO)
                     - providerAccountId: (필수) 소셜 플랫폼의 사용자 식별자
-                    - loginId, password, name, nickname, email 등 기본 회원 정보 포함
+                    - name, nickname, email 등 기본 회원 정보 포함
                 
                     [처리 로직]
                     1. provider + providerAccountId 조합으로 기존 가입 여부 확인
