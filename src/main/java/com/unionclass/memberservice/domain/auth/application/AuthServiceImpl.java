@@ -4,6 +4,8 @@ import com.unionclass.memberservice.client.profile.application.ProfileServiceCli
 import com.unionclass.memberservice.client.profile.dto.in.RegisterNicknameReqDto;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
+import com.unionclass.memberservice.common.kafka.event.MemberCreatedEvent;
+import com.unionclass.memberservice.common.kafka.util.KafkaProducer;
 import com.unionclass.memberservice.domain.auth.dto.in.GetLoginIdReqDto;
 import com.unionclass.memberservice.domain.auth.dto.in.SignInReqDto;
 import com.unionclass.memberservice.domain.auth.dto.in.SignUpWithCredentialsReqDto;
@@ -35,6 +37,8 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthRepository authRepository;
 
+    private final KafkaProducer kafkaProducer;
+
     /**
      * 1. 회원가입 (With Credentials)
      *
@@ -56,12 +60,13 @@ public class AuthServiceImpl implements AuthService {
                     .map(vo -> vo.toDto(memberUuid))
                     .forEach(memberAgreementService::registerMemberAgreement);
 
-            profileServiceClient.registerNickname(
-                    RegisterNicknameReqDto.of(memberUuid, signUpWithCredentialsReqDto.getNickname()));
-            log.info("닉네임 등록 성공 - memberUuid: {}, nickname: {}",
-                    memberUuid, signUpWithCredentialsReqDto.getNickname());
+            kafkaProducer.sendMemberCreatedEvent(MemberCreatedEvent.of(memberUuid, signUpWithCredentialsReqDto));
+
+//            profileServiceClient.registerNickname(
+//                    RegisterNicknameReqDto.of(memberUuid, signUpWithCredentialsReqDto.getNickname()));
 
             log.info("회원가입 전체 완료 - memberUuid: {}", memberUuid);
+
         } catch (Exception e) {
             log.error("회원가입 실패 - 입력 데이터: {}, 에러 메시지: {}", signUpWithCredentialsReqDto, e.getMessage(), e);
             throw new BaseException(ErrorCode.FAILED_TO_SIGN_UP);
