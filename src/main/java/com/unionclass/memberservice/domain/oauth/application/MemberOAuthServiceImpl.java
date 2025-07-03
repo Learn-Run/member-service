@@ -4,6 +4,8 @@ import com.unionclass.memberservice.client.profile.application.ProfileServiceCli
 import com.unionclass.memberservice.client.profile.dto.in.RegisterNicknameReqDto;
 import com.unionclass.memberservice.common.exception.BaseException;
 import com.unionclass.memberservice.common.exception.ErrorCode;
+import com.unionclass.memberservice.common.kafka.event.MemberCreatedEvent;
+import com.unionclass.memberservice.common.kafka.util.KafkaProducer;
 import com.unionclass.memberservice.common.security.CustomUserDetailsService;
 import com.unionclass.memberservice.common.security.OAuthUserDetails;
 import com.unionclass.memberservice.domain.auth.application.AuthService;
@@ -35,6 +37,8 @@ public class MemberOAuthServiceImpl implements  MemberOAuthService {
     private final MemberService memberService;
     private final AuthUtils authUtils;
     private final MemberOAuthRepository memberOAuthRepository;
+
+    private final KafkaProducer kafkaProducer;
 
     /**
      * /api/v1/oauth
@@ -94,10 +98,7 @@ public class MemberOAuthServiceImpl implements  MemberOAuthService {
                 .map(vo -> vo.toDto(memberUuid))
                 .forEach(memberAgreementService::registerMemberAgreement);
 
-        profileServiceClient.registerNickname(
-                RegisterNicknameReqDto.of(memberUuid, signUpWithOAuthReqDto.getNickname()));
-        log.info("닉네임 등록 성공 - memberUuid: {}, nickname: {}",
-                memberUuid, signUpWithOAuthReqDto.getNickname());
+        kafkaProducer.sendMemberCreatedEvent(MemberCreatedEvent.of(memberUuid, signUpWithOAuthReqDto));
 
         memberOAuthRepository.save(signUpWithOAuthReqDto.toEntity(memberUuid));
         log.info("OAuth 계정 연동 완료 - provider: {}, accountId: {}, memberUuid: {}",
